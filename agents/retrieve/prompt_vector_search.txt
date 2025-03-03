@@ -1,0 +1,3 @@
+{user_message}
+{api_config_keys}
+Include all mandatory attributes, URL, headers, query parameters

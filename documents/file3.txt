@@ -1,0 +1,32 @@
+			-------
+
+		Sample Test Case
+			*** Settings ***
+			Suite Setup       Setup Test Environment
+			Suite Teardown    Reset Test Environment
+			Library           RobotSPS
+			Force Tags        EXECUTION
+			Resource          ../../../Resources/01__CommonResources.txt
+			Resource          ../../../Resources/02__RulesAndActionsREST.txt
+			Variables         ../../../variables.yaml
+			Resource          ../../../SOAP/oneSetup.txt
+			Library           HSSRammbock
+			Resource          ../../../Resources/15__Verify_Edr_Cdr.robot
+			Resource          ../../../Resources/19__BDD_Generic_Keywords.robot
+
+			*** Variables ***
+			${testPrefix}     4959
+			${campaignID}     4897
+			${SubsId_E164}     99999${testPrefix}
+			${SessionId}      ${testPrefix};${sess_var}
+			${SubsId_IMSI}    99999${testPrefix}
+
+
+			*** Test Cases ***
+			SPSA4-4959
+
+
+				When Create Entity Device with id AS Dev1-${testPrefix}
+				AND Set LifeCycle for Device Dev1_a with ENTITY AS DefaultDeviceLifeCycle 
+				Then Get And Verify subscriptionIndex with -2 from Device Dev1-${testPrefix}
+				When Delete Entity Device with Dev1-${testPrefix}

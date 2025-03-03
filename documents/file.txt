@@ -1,0 +1,66 @@
+Here is the Robot BDD keywords documentation :
+			-------
+Create Entity ${EntityType} with ${arguments}
+				[Documentation]    This function is used for creating entity like account ,device ,group ,user etc. provided with a set of attribute and value as input arguments
+				...  This function takes 2 arguments:
+				...  1st arg: *EntityType*: like account ,device,group,user etc.
+				...  2nd arg: *arguments* : string of arguments with  the syntax :  with <parameter_name> AS <parameter_value> AND <parameter_name> AS <parameter_value> .
+				...  Default values for mandatory parameters will be used if not provided in string of arguments
+				...  eg: dayOfMonth =23 ,accountType=PRE_PAID for account
+				...  eg: identities will be set as IMSI with a random 10 digit number for device
+				...  eg: givenName =user id ,emails will be set for user in the format {userId}{randomStringOfLength6}@nokia.com
+				...  eg: devices will be set for group if no other association like devices ,parent,administrator,subscriptions etc is passed in the request
+				...  Sample Syntax : Create Entity Device with id AS D1 AND language AS ENGLISH
+				
+				
+Delete Entity ${EntityType} with ${EntityId}
+				[Documentation]    This function is used to delete the entities created using the create Profile keyword or Create Entity keyword
+				...    This function takes 2 arguments:
+				...    1st  : EntityType ,eg:Device,User,Group,Account
+				...    2nd : EntityId : the id of the entity to be deleted
+				...    sample syntax: Delete Account with A1
+				
+				
+Get And Verify ${attributeName} with ${attributeValue} from ${EntityType} ${EntityId}
+				${resp}    Get ${attributeName} info from ${EntityType} ${EntityId}
+				Should Be Equal As Evaluated    ${resp}    ${attributeValue}
+				
+				
+Set LifeCycle for ${EntityType} ${EntityId} with ${arguments}
+			[Documentation]    This function is used to set the lifecycle for entities.
+			...    This function takes 3 arguments :
+			...    1st : *EntityType* : the type of entity for which the lifecycle is to be added eg:account,user,group,device,bucket,counter,subscription
+			...    2nd : *EntityId* : the id of the entity
+
+			-------
+
+Sample Test Case
+			*** Settings ***
+			Suite Setup       Setup Test Environment
+			Suite Teardown    Reset Test Environment
+			Library           RobotSPS
+			Force Tags        EXECUTION
+			Resource          ../../../Resources/01__CommonResources.txt
+			Resource          ../../../Resources/02__RulesAndActionsREST.txt
+			Variables         ../../../variables.yaml
+			Resource          ../../../SOAP/oneSetup.txt
+			Library           HSSRammbock
+			Resource          ../../../Resources/15__Verify_Edr_Cdr.robot
+			Resource          ../../../Resources/19__BDD_Generic_Keywords.robot
+
+			*** Variables ***
+			${testPrefix}     4959
+			${campaignID}     4897
+			${SubsId_E164}     99999${testPrefix}
+			${SessionId}      ${testPrefix};${sess_var}
+			${SubsId_IMSI}    99999${testPrefix}
+
+
+			*** Test Cases ***
+			SPSA4-4959
+
+
+				When Create Entity Device with id AS Dev1-${testPrefix}
+				AND Set LifeCycle for Device Dev1_a with ENTITY AS DefaultDeviceLifeCycle 
+				Then Get And Verify subscriptionIndex with -2 from Device Dev1-${testPrefix}
+				When Delete Entity Device with Dev1-${testPrefix}

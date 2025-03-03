@@ -1,0 +1,121 @@
+---Goal---
+Generate main elements
+--------------
+Question: 
+-------
+  Provide Name elements with action detail only in json format from below statement and further again provide elements from each actionDetail.
+  {question}
+  
+----------
+----Example-------------
+{{
+  "elements": [
+    {{
+      "name": "Create Account",
+      "actionDetail": "Account1 with Balance 1000. Account should have Entity Lifecycle DefaultAccountLifeCycle and Period Lifecycle AccountRenewPeriodLC"
+    }},
+    {{
+      "name": "Account1",
+      "actionDetail": "Balance 1000. Account should have Entity Lifecycle DefaultAccountLifeCycle and Period Lifecycle AccountRenewPeriodLC"
+    }},
+    {{
+      "name": "Balance",
+      "actionDetail": "1000"
+    }},
+    {{
+      "name": "Entity Lifecycle",
+      "actionDetail": "DefaultAccountLifeCycle"
+    }},
+    {{
+      "name": "Period Lifecycle",
+      "actionDetail": "AccountRenewPeriodLC"
+    }},
+    {{
+      "name": "DefaultAccountLifeCycle",
+      "actionDetail": ""
+    }},
+    {{
+      "name": "AccountRenewPeriodLC",
+      "actionDetail": ""
+    }},
+    {{
+      "name": "Create Device",
+      "actionDetail": "Device1 and Entity LifeCycle EntityLifeCycle and Indentity Type IMSI 88778845454. Attach Custom Data Cust1 as Vodafone"
+    }},
+    {{
+      "name": "Device1",
+      "actionDetail": "Entity LifeCycle EntityLifeCycle and Indentity Type IMSI 88778845454. Attach Custom Data Cust1 as Vodafone"
+    }},
+    {{
+      "name": "Entity LifeCycle",
+      "actionDetail": "EntityLifeCycle"
+    }},
+    {{
+      "name": "Indentity Type",
+      "actionDetail": "IMSI 88778845454"
+    }},
+    {{
+      "name": "IMSI",
+      "actionDetail": "88778845454"
+    }},
+    {{
+      "name": "Custom Data",
+      "actionDetail": "Cust1 as Vodafone"
+    }},
+    {{
+      "name": "Cust1",
+      "actionDetail": "Vodafone"
+    }},
+    {{
+      "name": "subscribe bundle",
+      "actionDetail": "Bundle1 with Device1 and Account1"
+    }},
+    {{
+      "name": "Bundle1",
+      "actionDetail": "with Device1 and Account1"
+    }},
+    {{
+      "name": "Device1",
+      "actionDetail": "and Account1"
+    }},
+    {{
+      "name": "Account1",
+      "actionDetail": ""
+    }},
+    {{
+      "name": "Execute GY CCR-I",
+      "actionDetail": "with Service Identifier AS 66 AND RSU as 660 with {{Session-Id}} is 88778888900. Verify that Result Code is 2001"
+    }},
+    {{
+      "name": "Service Identifier",
+      "actionDetail": "AS 66"
+    }},
+    {{
+      "name": "AS",
+      "actionDetail": "66"
+    }},
+    {{
+      "name": "RSU",
+      "actionDetail": "660"
+    }},
+    {{
+      "name": "{{Session-Id}}",
+      "actionDetail": "88778888900"
+    }},
+    {{
+      "name": "Result Code",
+      "actionDetail": "2001"
+    }},
+    {{
+      "name": "Delete Device",
+      "actionDetail": "and Account"
+    }},
+    {{
+      "name": "Account",
+      "actionDetail": ""
+    }}
+  ]
+}}
+-------------------------------------------
+---Instructions---  
+ do not provide any explanation.

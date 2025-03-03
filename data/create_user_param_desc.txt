@@ -1,0 +1,45 @@
+Create User REST API documentation:
+
+Attribute Descriptions:
+	user (object): Mandatory. The main object representing the user to be created.
+		personalInfo (object): Mandatory. Contains personal information about the user.
+			firstName (string): Mandatory. The first name of the user.
+			lastName (string): Mandatory. The last name of the user.
+			age (integer): Optional. The age of the user.
+			contactDetails (object): Mandatory. Contains contact information.
+				email (string): Optional. The user's email address.
+				phoneNumbers (array): Mandatory. A list of phone numbers.
+					Each phone number object contains:
+						type (string): Type of phone number (e.g., mobile, home).
+						number (string): The actual phone number.
+	address (object): Optional. Contains the user's address details.
+		street (string): Optional. The street address.
+		city (string): Optional. The city name.
+		state (string): Optional. The state abbreviation.
+		postalCode (string): Optional. The postal code.
+		country (object): Optional. Contains country information.
+			name (string): Optional. The full name of the country.
+			code (string): Optional. The country code.
+	preferences (object): Optional. User preferences for notifications and language settings.
+		language (string): Optional. Preferred language for communication. Options: en for english, Fr for French and gr for German
+		notifications (object): Optional. Notification preferences for different channels.
+			email (boolean): Optional. Whether to receive notifications via email. true if user prefers notifications via SMS.
+			sms (boolean): Optional. Whether to receive notifications via SMS. true if user prefers notifications via SMS.
+			pushNotifications (boolean): Optional. Whether to receive push notifications. Options are true and false.
+
+
+Response Details:
+	Status Code: 201 Created
+	Response Body Structure:
+		{
+		  "message": "User created successfully.",
+		  "userId": "{newUserId}",
+		  "userDetails": {
+			// Echo back the created user details
+		  }
+		}
+
+Error Messages:
+	400 Bad Request: Invalid input data or missing required fields.
+	401 Unauthorized: Invalid or missing authorization token.
+	500 Internal Server Error: An unexpected error occurred on the server.

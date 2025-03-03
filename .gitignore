@@ -1,0 +1,16 @@
+.aider*
+.env
+.venv
+config.yml
+*__pycache__*
+old/*
+data/db
+data/old
+*.zip
+*.bak
+*.dtmp
+*.bkp
+node_modules
+/GUI
+/venv
+/venv2

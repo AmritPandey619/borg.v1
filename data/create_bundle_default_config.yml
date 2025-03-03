@@ -1,0 +1,4 @@
+charging service IDs: CSD1,CSD2
+fee: 10
+entity life cycle: DefaultSubscriptionLifeCycle
+periodic lifecycle: DefaultSubscriptionBillingCycle

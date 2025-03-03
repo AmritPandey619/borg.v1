@@ -1,0 +1,11 @@
+langchain
+langgraph
+langchain_openai
+langchain_ollama
+langchain_community
+langchain_google_genai
+langchain_chroma
+chromadb
+flask
+flask_socketio
+flask_cors

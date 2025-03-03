@@ -1,0 +1,510 @@
+"Set List Attribute for ${EntityType} ${EntityId} with ${arguments}
+      [Documentation]    This function is used to set list type attribute and value to an entity
+    ...    This function takes 3 values:
+    ...    1st :*EntityType* : the type of entity for which the attribute is being added , eg : user
+    ...    2nd : *EntityId* : the id of the entity ,eg: U12
+    ...    3rd: *arguments* : string of arguments in the format : with <parameterName> AS <parameterValue> AND <parameterName> AS <parameterValue>
+    ...    eg: *aggregateViewIdList* in *device,Group*
+    ...    eg: *phoneNumbers, emails* in *User*
+    ...    Sample syntax : Set List Attribute for User User1 with emails AS email1@nokia.com AND emails AS email2@nokia.com AND phoneNumbers AS 1234567890","
+	
+"Prepare Entity Json for ${EntityType} with ${arguments}
+    [Documentation]    This function is used to create json file of an entity which will be further used in accountProfile and GroupAccountProfile.
+    ...    It also returns EntityId .
+    ...    This function takes the following arguments for different entities:
+    ...    This function takes 2 arguments :
+    ...    1st: *EntityType*: the type of entity for which json is to be created like account,device,user,group,bucket,counter,chargingServiceObjList
+    ...    2nd: *arguments*:* arguments* : string of arguments with  the syntax :  with <parameter_name> AS <parameter_value> AND <parameter_name> AS <parameter_value> .
+    ...    Sample syntax : Prepare Entity Json for Account with id AS A1 AND dayOfMonth AS 11 AND dayOfWeek AS MONDAY AND overageLimit AS 100",
+	
+"Create Entity ${EntityType} with ${arguments}
+    [Documentation]    This function is used for creating entity like account ,device ,group ,user etc. provided with a set of attribute and value as input arguments
+    ...  Consider Create Account/Device/user/Group as Create Entity
+    ...  This function takes 2 arguments:
+    ...  1st arg: *EntityType*: like account ,device,group,user etc.
+    ...  2nd arg: *arguments* : string of arguments with  the syntax :  with <parameter_name> AS <parameter_value> AND <parameter_name> AS <parameter_value> .
+    ...  Default values for mandatory parameters will be used if not provided in string of arguments
+    ...  eg: dayOfMonth =23 ,accountType=PRE_PAID for account
+    ...  eg: identities will be set as IMSI with a random 10 digit number for device
+    ...  eg: givenName =user id ,emails will be set for user in the format {userId}{randomStringOfLength6}@nokia.com
+    ...  eg: devices will be set for group if no other association like devices ,parent,administrator,subscriptions etc is passed in the request
+    ...  Sample Syntax : Create Entity Device with id AS D1 AND language AS ENGLISH",
+
+"Create Profile with ${arguments}
+    [Documentation]   **For creating Profile using device**:
+    ...    account , device are required ,user may not be added if owner parameter in device is omitted
+    ...    This function takes 1 argument :  *arguments* : string of arguments with  the syntax :  with <parameter_name> AS <parameter_value> AND <parameter_name> AS <parameter_value> .
+    ...    sample syntax: Create Profile with Account AS A12 AND User AS U12 AND Device AS D12 AND Device AS D11
+    ...    **For creating profile using group**:
+    ...    account ,group are required
+    ...    device must be created prior using "Create Entity"{EntityType} with "{arguments}"".
+    ...    for eg: Create Device as D12 with id AS D12 AND allowOverage AS false AND feeOverride AS 0
+    ...    This function takes 1 argument : *arguments*: string of arguments with  the syntax :  with <parameter_name> AS <parameter_value> AND <parameter_name> AS <parameter_value> .
+    ...    sample syntax: Create Profile with Account AS A12 AND User AS U12 AND Group AS G12
+    ...    *Account must always be deleted in the end because it might be referenced in group/device subscription*
+    ...    *If mandatory parameters are not added to the request then default values will be used*
+    ...    eg: for account: dayOfMonth =23 , accountType =PRE_PAID
+    ...    for device: identities attribute will have IMSI and a random 10 digit value
+    ...    for user : email will be added with random string of length 6 with the format {userId}{randomStringOfLength6}@nokia.com
+    ...    for group : devices will be added as default parameters if no other association as devices,administrators,subscriptions,parents is added in the request",
+
+"Delete Entity ${EntityType} with ${EntityId}
+    [Documentation]    This function is used to delete the entities created using the create Profile keyword or Create Entity keyword
+    ...    This function takes 2 arguments:
+    ...    1st  : EntityType ,eg:Device,User,Group,Account
+    ...    2nd : EntityId : the id of the entity to be deleted
+    ...    sample syntax: Delete Account with A1",
+	
+"Set Object ${AttributeName} for ${EntityType} ${EntityId} with ${arguments}
+    [Documentation]    This function is used to add object type attributes for the given entity like unitType in Bucket
+    ...    Following entities take the corresponding attributes as objects
+    ...    *owner* in *device*
+    ...    *parent* in *group*
+    ...   *unitType* in *bucket,counter*
+    ...    This function takes 4 arguments:
+    ...    1st: AttributeName: the name of the attribute eg:owner,parent,unitType
+    ...    2nd : EntityType : the entity for which these attributes have to be set .eg: Device,Group,Bucket,Counter
+    ...    3rd : EntityId : the id of the entity
+    ...    4th: *arguments* : string of arguments with the syntax :  with <parameter_name> AS <parameter_value> AND <parameter_name> AS <parameter_value> .
+    ...    sample syntax: Set Object unitType for Counter Ctr with unitTypeName AS KByte AND kindOfUnit AS VOLUME AND shortName AS KB",
+
+"Set List Object ${AttributeName} for ${EntityType} ${EntityId} with ${arguments}
+    [Documentation]    This function is used to add objectList type of parameters to the given entity
+    ...    Consider Set Indentity Type or configure Indentity Type as Set List Object identities for
+    ...    The following entities have the following attributes of the objectList type:
+    ...    *Group*  : administrators,devices
+    ...    *device* : identities
+    ...    This function takes 4 arguments :
+    ...    1st: *AttributeName*: the name of the objectList type attribute eg: identities
+    ...    2nd: *EntityType*:type of the entity for which the attribute is to be added .eg: group,device
+    ...    3rd : *EntityId*: the id of the entity
+    ...    4th:  *arguments* : string of arguments with  the syntax :  with <parameter_name> AS <parameter_value> AND <parameter_name> AS <parameter_value> .
+    ...    sample syntax : Set List Object identities for Device Dev1 with identityType AS E164 AND value AS 1234567890
+    ...    sample syntax : Set List Object administrators for Group Group1 with id AS User1",
+
+"Set LifeCycle for ${EntityType} ${EntityId} with ${arguments}
+    [Documentation]    This function is used to set the lifecycle for entities.
+    ...    For Lifecycle use Set LifeCycle For and It should use before Create Entity
+    ...    This function takes 3 arguments :
+    ...    1st : *EntityType* : the type of entity for which the lifecycle is to be added eg:account,user,group,device,bucket,counter,subscription
+    ...    2nd : *EntityId* : the id of the entity
+    ...    3rd : *arguments* : string of arguments with  the syntax :  with <parameter_name> AS <parameter_value> AND <parameter_name> AS <parameter_value> .
+    ...    eg: Set LifeCycle for Account A1 with ENTITY as ELC AND PERIOD AS PELC",
+	
+"Set Subscription to ${EntityType} ${EntityId} for ${BundleName} with ${arguments}
+    [Documentation]    This function is used to add subscription to the specified entity. like device or group
+    ...    This function takes 4 arguments :
+    ...    1st : *EntityType* : the type of entity for which subscription is to be added , eg: device ,group.
+    ...    2nd : *EntityId* : the id of the entity
+    ...    3rd : *BundleName* : the name of the bundle to be added to the subscription
+    ...    4th :  *arguments* : string of arguments with  the syntax :  with <parameter_name> AS <parameter_value> AND <parameter_name> AS <parameter_value>
+    ...    sample syntax :
+    ...    Set Subscription to Device D1 for B1 with alternateId AS asdg AND feeOverride AS 0 (when creating entity using profile)
+    ...    Set Subscription to Device Dev2412_1 for service_data with account AS A123 (when creating entity)",
+
+"Set States ${StateType} for ${EntityType} ${EntityId} with ${arguments}
+    [Documentation]    This function is used to set states for device .
+    ...    This function takes 4 arguments:
+    ...    1st : *StateType*: the type of state: eg:ENTITY,PERIOD
+    ...    2nd: *EntityType*: the type of entity for which states are to be added . eg: device
+    ...    3rd : *EntityId* : the id of the entity . eg: D1
+    ...    4th : *arguments* : string of arguments with  the syntax :  with <parameter_name> AS <parameter_value> AND <parameter_name> AS <parameter_value> .
+    ...    sample syntax : Set States ENTITY for Device D1 with initial AS true AND barring AS false",
+
+"Set ${ServiceEntity} attributes for ${ServiceEntityId} with ${arguments}
+    [Documentation]    This function is used to set service entity attributes like bundle and chargingServiceObjList
+    ...    This function takes 3 arguments:
+    ...    1st: *ServiceEntity* : the service entity for which attributes are to be set .eg: bundles, chargingServiceObjList
+    ...    2nd: *ServiceEntityId* : the Id of the service entity
+    ...    3rd: *arguments* : string of arguments in the format : with <parameterName> AS <parameterValue> AND <parameterName> AS <parameterValue>
+    ...    sample syntax : Set Bundle attributes for Bundle1 with buckets AS bucket1 AND buckets AS bucket2 AND counters AS Ctr1 AND counters AS Ctr2
+    ...    sample syntax : Set ChargingServiceObjList attributes for CL1 with globalBucketDef AS AL AND globalCounterDef AS Ctr1
+    ...    sample syntax :Set Bundle attributes for Bundle2 with chargingServiceObjList AS CL AND chargingServiceObjList AS CL1",
+
+"Delete Profile with ${arguments}
+    [Documentation]    This function is used to delete Profile on the basis of entityType ,entityId and operation to be performed.
+    ...    This function takes 1 argument :
+    ...    arguments: string of arguments in the format with <parameterName> AS <parameterValue> AND <parameterName> AS <parameterValue>
+    ...    sample syntax: Delete Profile with entityType AS ACCOUNT AND entityID AS Acc1 AND operation AS DELETE_ALL
+    ...    sample syntax:Delete Profile with entityType AS DEVICE AND IMSI AS 987654321 AND E164 AS 987654321 AND operation AS DELETE_ALL
+    ...    sample syntax: Delete Profile with entityType AS GROUP AND entityId AS Group1 AND operation AS DELETE_ALL",
+
+"Set Custom Data for ${EntityType} ${EntityId} with ${arguments}
+    [Documentation]    This function is used to set custom data for a specified entity
+    ...    Consider Set Custom data or configure custom data as Set Custom Data for and It should use before Create Entity
+    ...    It takes 3 arguments:
+    ...    1st : EntityType : the type of entity for which custom data is to be added
+    ...    2nd : EntityId : the id of the entity
+    ...    3rd: *arguments* : string of list of arguments in the format with <parameterName> AS <parameterValue> AND <parameterName>
+    ...    AS <parameterValue>
+    ...    sample syntax: Set Custom Data for Account A12 with key AS cd1_acc AND type AS STRING AND value AS acc_cust",
+
+"Set Account Balance with ${arguments}
+    [Documentation]    This function is used to set balance for account after its creation.
+    ...    Consider Set Account Balance or Balance as Set Account Balance with
+    ...    This function takes only 1 argument:
+    ...    *arguments*: string of arguments in the format with <parameterName> AS <parameterValue> AND <parameterName> AS <parameterValue>
+    ...    sample syntax : Set Account Balance with accountId AS A1 AND accountBalance AS 1000
+    ...    parameters: accountId=,accountBalance=,serviceProvider=,updateSession=0",
+
+"Update ${EntityType} ${EntityId} details
+    [Documentation]    This function is used to update the entity details.
+    ...    It takes 2 arguments:
+    ...    1st:*EntityType*: The type of entity which is to be updated,eg:Account,Device,Group,User
+    ...    2nd:*EntityId*:The id of the entity.
+    ...    sample syntax: Update Account Acc1 details",
+
+"Get ${attributes} using reference from ${EntityType} with ${arguments}
+    [Documentation]    This function is used to get subscriber entity details or attribute data upto level1
+    ...    This function returns the entire response text if 'all' attribute is mentioned, else the specified
+    ...    attributes are returned with their values
+    ...    This function takes 3 arguments:
+    ...    1st: *attributes*: the attributes whose values is to be fetched
+    ...    2nd: *EntityType*: the type of subscriber entity from which the attributes are to be fetched , eg: Account,Device,User,Group
+    ...    3rd: *arguments*:string of arguments in the format : with <parameterName> AS <parameterValue> AND <parameterName> AS <parameterValue>
+    ...    sample syntax:
+    ...    Get hourOfDay AND timeZoneId using reference from Account with device AS D1
+    ...    Get dayOfMonth AND accountBalance using reference from Account with group AS G1
+    ...    Get all using reference from Account with id AS A1 and accountBalance AS 1000
+    ...    Get identities using reference from Device with group AS G1
+    ...    Get all using reference from Device with IMSI AS 1234567890 AND E164 AS 1234567890
+    ...    Get states using reference from Device with owner AS User1
+    ...    Get emails AND phoneNumbers using reference from User with id AS User1
+    ...    Get phoneNumbers using reference from User with emails AS email@nokia.com
+    ...    Get emails using reference from User with phoneNumbers AS 1234567890
+    ...    Get facebookId using reference from User with givenName AS User1
+    ...    Get all using reference from User with surname AS User1
+    ...    Get all using reference from User with facebookId AS nokiaUserFBId
+    ...    Get traversalOrder using reference from Group with name AS Group1
+    ...    Get lifeCycleNames using reference from Group with devices AS Dev1",
+	
+"Get ${attribute} info from ${EntityType} ${EntityId}
+    [Documentation]    This function is used to get entity detail or attribute data upto level1.
+    ...    This function returns the entire response text if 'all' attribute is mentioned, else the specified
+    ...    attributes are returned with their values
+    ...    This function takes 3 arguments:
+    ...    1st: *attribute*: the attribute whose values is to be fetched
+    ...    2nd: *EntityType*: the type of entity from which the attributes are to be fetched , eg: Account,Device,User,Group,Charging,Bucket,Counter,Bundle,AggregateView
+    ...    3rd: *EntityId*:id of the entity from which the values are to be fetched
+    ...    sample syntax:
+    ...    Get accountBalance from Account Acc1
+    ...    Get identities from Device Dev1
+    ...    Get emails from User User1
+    ...    Get all info from Group Group1
+    ...    Get all info from Bucket bucket1
+    ...    Get all info from Bundle Bundle1
+    ...    Get all info from AggregateView AV
+    ...    Get all info from Charging CL_data
+    ...    Get all info from Counter Ctr",
+  
+
+"Remove Subscription From ${EntityType} ${EntityId} with ${arguments}
+    [Documentation]    This function is used to remove subscription from given Entity
+    ...    This function takes 3 arguments:
+    ...    1st:*EntityType*:the type of entity from which the subscription is to be removed , eg: Device ,Group
+    ...    2nd:*EntityId*: the id of the entity
+    ...    3rd:*arguments*:string of arguments in the format : with <parameterName> AS <parameterValue> AND <parameterName> AS <parameterValue>
+    ...    sample syntax:
+    ...    Remove Subscription From GROUP Group1 with bundleNames AS B1
+    ...    Remove Subscription From GROUP Group1 with alternateIds AS qwerty AND alternateIds AS qwertyu1",
+
+"Update Discount with ${arguments}
+    [Documentation]    This function is used to update discount entity.
+    ...    This function takes 1 argument: 
+    ...    *arguments*:string of arguments in the format : with <parameterName> AS <parameterValue> AND <parameterName> AS <parameterValue>
+    ...    sample syntax:
+    ...    Update Discount with name AS Discount1112 AND bundleName AS service_data AND bundleFeeDiscountType AS ABSOLUTE AND bundleFeeDiscount AS 8 ",
+
+"Add Subscription with ${arguments}
+    [Documentation]
+    ...    This function is used to add Subscription to entity like Device and Group
+    ...    This function takes 2 arguments:
+    ...    *arguments* : string of list of arguments in the format with <parameterName> AS <parameterValue> AND <parameterName> AS <parameterValue>
+    ...    sample syntax :
+    ...    Add Subscription with accountId AS A123 AND entities AS Device Dev123 AND entities AS Device Dev_test AND bundle AS service_data
+    ...    Add Subscription with accountId AS A123 AND entities AS Device Dev_subs2",
+
+"Get And Verify ${attributeName} with ${attributeValue} from ${EntityType} ${EntityId}
+    ${resp}    Get ${attributeName} info from ${EntityType} ${EntityId}
+    Should Be Equal As Evaluated    ${resp}    ${attributeValue}",
+	
+"New_Trigger ${call} ${callType}-${RequestNumber} with ${Session-Id} via ${interface} ${message} for ${DeviceId} with Service-Args AS ${Servicearguments} AND Call-Args AS ${CallArguments}
+    [Documentation]    This keyword is used to trigger a call.
+    ...    This keyword maps to:
+    ...    1: define message for send,2: IEC REQUESTForSCURmissingTimestamp, 3: Client Sends Message.
+    ...    It sets the service information by default according to the call if serviceInformation is not set prior.
+    ...    It also sets the MSCC for SCUR if they are not set prior.
+    ...    Consider RSU as Requested-Service-Unit
+    ...    The keyword takes 9 arguments:
+    ...    1st: call: the call which needs to be triggered , eg: PS,SMS,IMS,VoLTe,MMS.
+    ...    2nd: callType: the type of call , eg: Initial,Update,Terminate
+    ...    3rd: RequestNumber: the CC-Request-Number ,eg:Initial-0, Update-1,Update-2,Terminate-3
+    ...    4th: Session-Id: the id of the session for which the call is to be triggered.
+    ...    5th: interface: the interface on which the call is to be run , eg: GY,SY etc.
+    ...    6th: message: the message that needs to sent , eg: CCR,SNA
+    ...    7th: DeviceId: the id of the device for which the call is to be run
+    ...    8th: ServiceArgs: a string of serviceArguments in the format <parameterName> AS <parameterValue> AND <parameterName> AS <parameteValue>
+    ...    9th: CallArgs: a string of arguments that need to be set for the scur call in the format <parameterName> AS <parameterValue> AND <parameterName> AS <parameterValue>
+    ...    sample syntax:
+    ...    format1:
+    ...    Trigger PS Initial-0 with ${Session-Id}1 via GY CCR for Device12 with Service-Args AS Service-Identifier AS 1000 AND Requested-Service-Unit AS 10 AND Call-Args AS Origin-Host AS ${GY_ORIGIN_HOST}
+    ...    format2:
+    ...    Trigger PS Update-1 with ${Session-Id}1 via GY CCR for Device405491 with Service-Args AS MSCC AS MSCC[0] AND MSCC AS MSCC[1] AND Call-Args AS Origin-Host AS ${GY_ORIGIN_HOST}
+    ...    format3:
+    ...    Trigger PS Terminate-3 with ${Session-Id}1 via GY CCR for Device405491 with Service-Args AS Service-Identifer AS 0 AND Used-Service-Unit AS 10 AND Call-Args AS ",
+	
+"New_Set AVPs for ${Session-Id} with ${arguments}
+    [Documentation]    This keyword is used to add direct AVPs like Result Code,CC-Request-Number etc.
+    ...    This keyword takes only 1 argument:
+    ...    arguments:string of arguments in the format with <avpName> AS <avpValue> AND <avpName> AS <avpValue>
+    ...    sample syntax:Add AVPs with Result-Code AS 2001 AND CC-Request-Number AS 1",
+	
+"New_Trigger CCR ${Call-Type}-${Request-Number} for Dev-Identity1 ${Dev-Id1} Dev-Identity2 ${Dev-Id2} with ${arguments}
+    [Documentation]    This keyword is used to set parameters like Session-Id,Origin-Host,Origin-Realm,Destination-Realm,
+    ...    Origin-State-Id,Service-Context-Id,Auth-Application-Id,Requested-Action,Multiple-Services-Indicator.
+    ...    This keyword maps to IEC REQUESTForSCURmissingTimestamp
+    ...    This keyword takes 5 arguments:
+    ...    1st:Call-Type:the type of call .eg: Initial,Update,Terminate
+    ...    2nd:Request-Number: request-Number, eg:for Initial : 0,
+    ...    for Update : 1,2,3,..n,
+    ...    for Terminate : n+1
+    ...    3rd:Dev-Id1: the device identities like IMSI,E164,etc.
+    ...    4th:Dev-Id2: the device identities like IMSI,E164,etc.
+    ...    5th:arguments:a string of arguments in the format with <avpName> AS <avpValue> AND <avpName> AS <avpValue>
+    ...    sample syntax: Trigger CCR Initial-0 for Dev-Identity1 987654321 Dev-Identity2 987654321 with Session-Id AS ${Session-I",
+	
+"New_Add AVPs with ${arguments}
+    [Documentation]    This keyword is used to add direct AVPs like Result Code,CC-Request-Number etc.
+    ...    This keyword takes only 1 argument:
+    ...    arguments:string of arguments in the format with <avpName> AS <avpValue> AND <avpName> AS <avpValue>
+    ...    sample syntax:Add AVPs with Result-Code AS 2001 AND CC-Request-Number AS 1",
+
+:New_Setup ${call} call via ${interface} ${message}
+    [Documentation]    This keyword is used to set the Service-Context-Id, req_bit,application_id,Auth-Application-Id
+    ...    based on interface and message provided. This keyword maps to "Define Message for Send".
+    ...    This keyword takes 3 arguments:
+    ...    1st: call: the type of call eg:IMS,PS,VOLTE,SMS,MMS etc.
+    ...    2nd: interface:interface on which the call is to be performed . eg: GX,SY,GY etc.
+    ...    3rd: message: message name .eg: RAR,CCR,RAA,ASA etc.
+    ...    sample syntax:
+    ...    Setup PS call via GY CCR",
+"New_Set ${parentAVPName} for ${Session-Id} AS Grouped-AVP-${noOfTimes} with ${flags} AND children AS ${childAVPs}
+    [Documentation]    This keyword is used to set or add the parentAVP based on the value in SetorAdd variable.
+    ...    If value set is chosen, then the AVP can be retrieved later using avpName AS avpName[noOfTimes].
+    ...    If value add is chosen, then the AVP will be added to the diameter message.
+    ...    This function takes 5 values:
+    ...    1st:setOrAdd: use "Set" if the avp is to be retrieved for later use else use "Add".
+    ...    2nd:parentAVPName: the name of the parentAvp.
+    ...    3rd:noOfTimes: the frequency of the avp's occurence. eg:structname=avpName[noOfTimes]
+    ...    4th:flags: the flags to be set for parentAVP like vid,vendor_specific,mandatory,protected.(by default all are set to 0).use format <flagName> AS <flagValue> AND <flagName> AS <flagValue>.
+    ...    5th: childAVPs: the list of childAVPs in the format <childAVPName> AS <childAvpValue> AND <childAVPName> AS <childAVPValue>. (All these childAVPs must be set prior.)
+    ...    sample syntax:
+    ...    Choose to Add Policy-Counter-Status-Report AS Grouped-AVP-0 with vid AS 10415 AND vendor_specific AS 1 AND mandatory AS 1 AND children AS Policy-Counter-Identifier AS VPC1 AND Policy-Counter-Status AS LOW
+    ...    Choose to Set Used-Service-Unit AS Grouped-AVP-0 with mandatory AS 1 AND children AS CC-Total-Octets AS 5 AND Tariff-Change-Usage AS 0",
+"New_Set ${AVPName} for ${Session-Id} with value ${avp_val} AND flags ${flags}
+    [Documentation]    This keyword is used to set the child-AVP for adding later to the parent AVPs.
+    ...    This keyword takes 3 arguments:
+    ...    1st: AVPName: the name of the child-AVP.
+    ...    2nd: avp_val: the value of the AVP.
+    ...    3rd: flags: the flags to be set like vid,vendor_specific,mandatory,protected.(by default all are set to 0).use format <flagName> AS <flagValue> AND <flagName> AS <flagValue>.
+    ...    sample syntax: Set Tariff-Change-Usage AS child-AVP with value 1 AND flags mandatory AS 1 AND vid AS 10415 AND vendor_specific AS 1",
+	
+"New_Set MSCC-${noOfTimes} for ${call} call for ${Session-Id} with ${arguments}
+    [Documentation]    This function is used to add MSCC to the request.
+    ...    This keyword maps to MSCCForSCUR.
+    ...    This keyword takes 3 arguments:
+    ...    1st: noOfTimes:the number of times MSCC AVP is to be added. eg:MSCC[0],MSCC[1]
+    ...    2nd: call: the type of call for which the MSCC is being added.eg:IMS,SMS,PS.
+    ...    3rd: arguments:string of arguments in the format with <avpName> AS <avpValue> AND <avpName> AS <avpValue>
+    ...    If unitType is not provided with RSU eg: Requested-Service-Unit AS 20 , default values would be used for the unitTypes:
+    ...    eg:CC-Total-Octets :PS call
+    ...    CC-Service-Specific-Units : SMS/MMS call
+    ...    CC-Time :IMS/VoLTE call
+    ...    To add the unitType specifically follow syntax: Requested-Service-Unit(CC-Input-Octets) AS 20
+    ...    sample syntax: Add MSCC-0 for PS call with Service-Identifier AS 0 AND Used-Service-Unit(CC-Total-Octets) AS 20 AND Requested-Service-Unit AS 20",
+	
+"New_Set flagged-AVPs ${avps} with flags ${flags}
+    [Documentation]    This keyword is used to add AVPs with given flags.
+    ...    This keyword can be used when multiple AVPs with same flags are to be added.
+    ...    This keyword takes 2 arguments:
+    ...    avps: the list of avps with values in the format <avpName> AS <avpValue> AND <avpName> AS <avpValue>.
+    ...    flags: the list of flags for the given AVPs.(All flags are 0 by default)
+    ...    sample syntax:
+    ...    Add flagged-AVPs avp1 AS val1 AND avp2 AS val2 with flags vid AS vid_val AND vendor_specific AS 1",
+	
+
+"Set GSU MSCC-${noOfTimes} for ${call} call with ${arguments}
+    [Documentation]    This function is used to add MSCC to the request.
+    ...    This keyword takes 3 arguments:
+    ...    1st: noOfTimes:the number of times MSCC AVP is to be added. eg:MSCC[0],MSCC[1]
+    ...    2nd: call: the type of call for which the MSCC is being added.eg:IMS,SMS,PS.
+    ...    3rd: arguments:string of arguments in the format with <avpName> AS <avpValue> AND <avpName> AS <avpValue>
+    ...    If unitType is not provided with GSU eg: Granted-Service-Unit AS 20 , default values would be used for the unitTypes:
+    ...    eg:CC-Total-Octets :PS call
+    ...    CC-Service-Specific-Units : SMS/MMS call
+    ...    CC-Time :IMS/VoLTE call
+    ...    To add the unitType specifically follow syntax: Granted-Service-Unit(CC-Input-Octets)
+    ...    sample syntax: Add GSU MSCC-0 for PS call with Granted-Service-Unit AS 10 AND Granted-Service-Unit(CC-Input-Octets) AS 10 AND Result-Code AS 2001 AND Service-Identifier",
+
+"new_Set Service Information AVP for ${call} call for Session-Id ${Session-Id} with ${arguments} AND Removables AS ${Removables}
+    [Documentation]    This keyword is used to add service-Information AVP to the request.
+    ...    This keyword takes 4 arguments:
+    ...    1st: call: call for which the service information is to be set ,eg:SMS,PS,IMS,MMS,VoLTe
+    ...    2nd: Session-Id: The id of the session for which the call is being run (Can be set using Generate Session-Id Keyword)
+    ...    3rd: arguments:string of avps whose values need to be changed in the format with <avpName> AS <avpValue>
+    ...    AND <avpName> AS <avpValue> (default values will be referred from call_variables file)
+    ...    4th: Removables: the list of AVPs that need to be removed in the format <avp1> AND <avp2>
+    ...    sample syntax:
+    ...    format 1:
+    ...    Set Service Information AVP for PS call for Session-Id {Session-Id} with SGSN-Address AS 192.168.206.145 AND
+    ...    PDP-Address AS 94.21.1.1 AND Removables AS PDP-Address AND 3GPP-Selection-Mode
+    ...    format 2:
+    ...    Set Service Information AVP for PS call for Session-Id {Session-Id} with defaults AND Removables AS None",
+
+"New_Add ServiceInfo
+    [Arguments]    ${Session-Id}
+    [Documentation]    This keyword is used to add the service-information set prior to the diameter message.",
+
+"New_Define Receiving Message with ${arguments}
+    [Documentation]    This keyword maps to Define Message For Receive.
+    ...    This keyword takes 1 argument:
+    ...    arguments:a string of arguments in the format with <argumentName> AS <argumentValue> AND <argumentName> AS <argumentValue>
+    ...    sample syntax: Define Receiving Message with msg AS GY CCA",
+
+"New_Extract avp ${avpName} value from ${message}
+    [Documentation]    This keyword is used to get the value of the given AVP from the given message.
+    ...    This keyword takes 2 arguments:
+    ...    1st: avpName : the name of the avpName whose value is to be fetched.
+    ...    2nd: message : the message recieved by client.
+    ...    sample syntax:
+    ...    Extract avp Hop-by-Hop Id value from ${message}
+    ...    Extract avp End-to-End Id value from ${message}
+    ...    Extract avp Session-Id value from ${message}",
+
+"New_Get ${attribute} from ${EntityType} ${EntityId} using hierarchy AS ${hierarchy}
+    [Documentation]    This keyword is used to get value of a specific attribute using hierarchy.
+    ...    This keyword takes 4 arguments:
+    ...    1st:*attribute*:The attribute whose value is to be fetched
+    ...    2nd:*EntityType*:The type of entity from which the value is to be fetched
+    ...    3rd:*entityId*:The id of the entity
+    ...    4th:*hierarchy*:the hierarchy using which the value of the attribute can be fetched
+    ...    sample syntax:
+    ...    Get barring using hierarchy from Account AS Acc_subs2 with states AND entry AS ENTITY AND value
+    ...    Get id using hierarchy from Device AS Dev_test with subscriptions
+    ...    Get bktInstId using hierarchy from Device AS Dev123 with subscriptions AS subs_id AND chargingServiceInstanceList AS CL_data AND bucketInfoList
+    ...    Get bktInstId from Device AS Dev123 using hierarchy AS subscriptions AS subs_id THEN chargingServiceInstanceList AS CL_data THEN bucketInfoList
+    ...    Get bktInstId from Device AS Dev123 using hierarchy AS bucketInfoList FROM chargingServiceInstanceList AS CL_data FROM subscriptions AS subs_id
+    ...    Get bktInstId from Device AS Dev123 using hierarchy AS    [subscriptions][subs_id][chargingServiceInstanceList][CL_data][bucketInfoList]",
+
+"New_Verify ${call} ${callType}-${RequestNumber} for ${Session-Id} with Result-Code ${Result-Code} with Call-Args ${CallArgs} AND Service-Args ${ServiceArgs}
+    [Documentation]    This keyword is used to verify the call.
+    ...    This keyword takes 7 arguments:
+    ...    1st: call: the call which is to be run , rg: PS,IMS,SMS etc.
+    ...    2nd: callType: the type of call ,eg:Initial,Update,Terminate.
+    ...    3rd:RequestNumber: CC-Request-Number, eg: Initial-0,Update-1,Terminate-2
+    ...    4th:Session-Id: the Session-id for which the call is to be run.
+    ...    5th:Result-Code: the Result-Code that is to be verified.
+    ...    6th:CallArgs: the arguments to be sent in Define Message For Receive.
+    ...    7th: ServiceArgs: the MSCC with which the call is to be verified.",
+    ...
+"New_Generate Session-Id
+    [Documentation]    This keyword generates and returns "unique" Session-Id string, containing Origin-Host &
+    ...    current timestamp values",
+	
+
+*** Test Cases ***
+#CreateProfile
+   
+"Set States for all entities 
+  Given Set States ENTITY for Device Dev1_a with id AS DefaultDeviceLifeCycle_Active AND name AS Active AND barring AS false AND initial AS true AND final AS false   
+  Given Set States ENTITY for Device Dev1_a with id AS DefaultDeviceLifeCycle_Active AND name AS newstate AND barring AS false AND initial AS false AND final AS false",
+
+"Set lifeCycles for all entities 
+    #lifecycles for bucket and counters are added already using prepare json keyword
+    AND Set LifeCycle for Account Acc1 with ENTITY AS SELC AND PERIOD AS DefaultAccountBillingCycle
+    AND Set LifeCycle for Device Dev1_a with ENTITY AS DefaultDeviceLifeCycle 
+    AND Set LifeCycle for User User1 with ENTITY AS UELC 
+    AND Set LifeCycle for Bundle service_data with ENTITY AS subslc", 
+
+
+
+"Set Custom data for all entities 
+
+    AND Set Custom Data for Account Acc1 with key AS cd1_acc AND value AS qwertyu AND type AS STRING
+    AND Set Custom Data for Account Acc1 with key AS cd_acc AND value AS true AND type AS BOOLEAN
+    AND Set Custom Data for Device Dev1_a with key AS cd_dev AND value AS true AND type AS BOOLEAN
+    AND Set Custom Data for User User1 with key AS cd_user AND value AS 172.12.21.1 AND type AS IP_ADDRESS",
+   
+"Set objectList type attributes for all entities 
+    AND Set List Object identities for Device Dev1_a with identityType AS IMSI AND value AS 987654322
+    AND Set List Object identities for Device Dev1_a with identityType AS E164 AND value AS 987654322
+    AND Set List Object identities for Device Dev1_a with identityType AS NAI AND value AS 987654322
+    AND Set List Object identities for Device Dev2_a with identityType AS IMSI AND value AS 345687652",
+
+"Set List type attributes for all entities  
+    AND Set List Attribute for Device Dev1_a with aggregateViewIdList AS AV 
+    AND Set List Attribute for Account Acc1 with thresholdProfileGroupIdList AS qwerty 
+    AND Set List Attribute for Bucket AL_data with thresholdProfileGroupIdList AS qwert 
+    AND Set List Attribute for Counter Ctr with thresholdProfileGroupIdList AS qwert
+    AND Set List Attribute for User User1 with phoneNumbers AS 9876545221 AND phoneNumbers AS 9876545222 AND emails AS email1@nokia.com AND emails AS email2@nokia.com ",
+    
+"Set object type attributes for all entites 
+    Given Set Object unitType for Bucket AL_data with unitTypeName AS Byte AND kindOfUnit AS VOLUME AND shortName AS B 
+    Given Set Object unitType for Counter Ctr with unitTypeName AS KByte AND kindOfUnit AS VOLUME AND shortName AS KB
+    Given Set Object unitType for Bucket AL with unitTypeName AS Byte AND kindOfUnit AS VOLUME AND shortName AS B 
+    Given Set Object unitType for Counter Ctr1 with unitTypeName AS Byte AND kindOfUnit AS VOLUME AND shortName AS B
+    Given Set Object owner for Device Dev1_a with id AS User1
+    AND Set Object timeOfDay for Device Dev1_a with dlSavings AS true AND timeZone AS IST",
+
+        
+"Prepare Json of subscriber entities 
+    then Prepare Entity Json for Bucket with id AS AL_data AND initialValue AS 4567 AND currentValue AS 123 AND carryOverValue AS 12 AND maxCarryOverValue AS 23 AND hourOfDay AS 22 AND dayOfMonth AS 11 AND name AS AL_data AND lifeCycleName AS bucketlc
+    then Prepare Entity Json for Counter with id AS Ctr AND counterType AS USAGE AND lifeCycleName AS counterlc AND counterScope AS ALL AND counterConsumptionType AS ALL AND name AS Ctr
+    then Prepare Entity Json for Bucket with id AS AL AND initialValue AS 45 AND currentValue AS 12 AND carryOverValue AS 1 AND maxCarryOverValue AS 2 AND hourOfDay AS 2 AND dayOfMonth AS 1 AND name AS AL AND lifeCycleName AS bucketlc
+    then Prepare Entity Json for Counter with id AS Ctr1 AND counterType AS USAGE AND lifeCycleName AS counterlc AND counterScope AS ALL AND counterConsumptionType AS ALL AND name AS Ctr1   
+    then Prepare Entity Json for Account with id AS Acc1 AND hourOfDay AS 11 AND dayOfMonth AS 11 AND dayOfWeek AS MONDAY AND accountType AS PRE_PAID AND timeZoneId AS IST AND overageLimit AS 10 AND billCycleCalendar AS Billcalendar 
+    then Prepare Entity Json for User with id AS User1 AND givenName AS User1 AND surname AS User1 AND facebookId AS abc@nokia.com 
+    then Prepare Entity Json for Device with id AS Dev1_a AND allowOverage AS false AND language AS ENGLISH AND notificationProfile AS SNotificationProfile 
+    then Prepare Entity Json for Device with id AS Dev2_a AND notificationProfile AS SNotificationProfile AND language AS ENGLISH",
+
+
+"Add Subscriptions to device 
+    AND Set Bundle attributes for service_data with buckets AS AL_data AND buckets AS AL AND counters AS Ctr AND counters AS Ctr1 
+    AND Set ChargingServiceObjList attributes for CL_data with globalBucketDef AS AL_data AND globalCounterDef AS Ctr 
+    And Set ChargingServiceObjList attributes for CL_data1 with globalBucketDef AS AL AND globalCounterDef AS Ctr1 
+    AND Set Bundle attributes for service_data_new with chargingServiceObjList AS CL_data AND chargingServiceObjList AS CL_data1 
+    AND Set Subscription to Device Dev1_a for service_data with alternateId AS qwerty AND feeOverride AS 0
+    AND Set Subscription to Device Dev2_a for service_data_new with alternateId AS qwerty1 AND feeOverride AS 0 ",
+
+"Create accountProfile using device 
+    then Create Profile with Account AS Acc1 AND User AS User1 AND Device AS Dev1_a AND Device AS Dev2_a AND meName AS hostME",
+"Delete all entities 
+    Delete Profile with entityType AS ACCOUNT AND entityId AS Acc1 AND operation AS DELETE_ALL",
+
+"Generate Session Id
+    ${Session-Id}    Generate Session-Id
+    Set Suite Variable    ${Session-Id}",
+
+"Test Initial with Service-Identifier/Rating-Group
+    New_Set Service Information AVP for PS call for Session-Id ${Session-Id}1 with defaults AND Removables AS None
+    New_Trigger PS Initial-0 with ${Session-Id}1 via GY CCR for Device405491 with Service-Args AS Service-Identifier AS 1000 AND Requested-Service-Unit AS 10 AND Call-Args AS Origin-Host AS ${GY_ORIGIN_HOST}
+    New_Verify PS Initial-0 for ${Session-Id}1 with Result-Code 2001 with Call-Args msg AS GY CCA AND Service-Args Service-Identifier AS 1000 AND Granted-Service-Unit AS 10 AND Result-Code AS 2001",
+
+"Test Update-1 with MSCC(RSU/GSU/USU Set)
+    New_Set MSCC-0 for PS call for ${Session-Id}1 with Requested-Service-Unit(CC-Total-Octets) AS 20 AND Service-Identifier AS 0
+    New_Set MSCC-1 for PS call for ${Session-Id}1 with Service-Identifier AS 1000 AND Requested-Service-Unit AS 10 AND Used-Service-Unit AS 10
+    New_Set Service Information AVP for PS call for Session-Id ${Session-Id}1 with defaults AND Removables AS None
+    New_Trigger PS Update-1 with ${Session-Id}1 via GY CCR for Device405491 with Service-Args AS MSCC AS MSCC[0] AND MSCC AS MSCC[1] AND Call-Args AS Origin-Host AS ${GY_ORIGIN_HOST}
+    New_Set MSCC-0 for PS call for ${Session-Id}1 with Service-Identifier AS 0 AND Granted-Service-Unit AS 20 AND Result-Code AS 2001
+    New_Set MSCC-1 for PS call for ${Session-Id}1 with Service-Identifier AS 1000 AND Granted-Service-Unit AS 10 AND Result-Code AS 2001
+    New_Verify PS Update-1 for ${Session-Id}1 with Result-Code 2001 with Call-Args msg AS GY CCA AND Service-Args MSCC AS MSCC[0] AND MSCC AS MSCC[1]",
+
+"Test Update-2 with MSCC(dynamic)
+    New_Set MSCC-0 for PS call for ${Session-Id}1 with Service-Identifier AS 0 AND Requested-Service-Unit AS default AND Used-Service-Unit AS default
+    New_Set Service Information AVP for PS call for Session-Id ${Session-Id}1 with defaults AND Removables AS None
+    New_Trigger PS Update-2 with ${Session-Id}1 via GY CCR for Device405491 with Service-Args AS MSCC AS MSCC[0] AND Call-Args AS Origin-Host AS ${GY_ORIGIN_HOST}
+    New_Verify PS Update-2 for ${Session-Id}1 with Result-Code 2001 with Call-Args msg AS GY CCA AND Service-Args Service-Identifier AS 0",
+
+"Test Terminate-3 with all defaults
+    New_Trigger PS Terminate-3 with ${Session-Id}1 via GY CCR for Device405491 with Service-Args AS Service-Identifer AS 0 AND Call-Args AS Origin-Host AS ${GY_ORIGIN_HOST}
+    New_Verify PS Terminate-3 for ${Session-Id} with Result-Code 2001 with Call-Args msg AS GY CCA AND Service-Args Service-Identifier AS",

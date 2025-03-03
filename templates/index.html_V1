@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Case Generator</title>
+    <link rel="stylesheet" href="static/styles.css">
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-box" id="chat-box"></div>
+        <div class="input-container">
+            <textarea id="description" placeholder="Enter your test description..."></textarea>
+            <button onclick="generateTestCase()">Send</button>
+        </div>
+    </div>
+    <script>
+        document.getElementById("description").addEventListener("keydown", function(event) {
+    if (event.key === "Enter" && !event.shiftKey) {
+        event.preventDefault();
+        generateTestCase();
+    }
+});
+
+function generateTestCase() {
+    const description = document.getElementById("description").value;
+    if (!description) {
+        alert("Please enter a test description.");
+        return;
+    }
+    
+    const chatBox = document.getElementById("chat-box");
+    const userMessage = document.createElement("div");
+    userMessage.className = "user-message";
+    userMessage.textContent = description;
+    chatBox.appendChild(userMessage);
+    document.getElementById("description").value = "";
+    chatBox.scrollTop = chatBox.scrollHeight;
+    
+    fetch("/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ description })
+    })
+    .then(response => response.json())
+    //.then(data => console.log(data))
+    .then(data => {
+        console.log(data);
+        const botMessage = document.createElement("div");
+        botMessage.className = "bot-message";
+        botMessage.textContent = data.robot_test || "Error generating test case";
+        chatBox.appendChild(botMessage);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    })
+    .catch(error => console.error("Error:", error));
+}
+
+    </script>
+</body>
+</html>

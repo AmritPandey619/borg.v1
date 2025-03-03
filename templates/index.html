@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chat Interface</title>
+    <link rel="stylesheet" href="static/styles.css">
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <img src="static/logo.svg" alt="Nokia Logo">
+            <div class="header-content">
+                <h1>Nokia Robot Test Script Generation</h1>
+                <p class="subtitle">AI-powered Robot Test Script Generator for Nokia Solutions</p>
+            </div>
+        </div>
+        <div class="chat-messages" id="chat-messages"></div>
+        <div class="input-container">
+            <select id="model-selector">
+                <option value="gemini-pro">Gemini Pro</option>
+                <option value="gemini-1.5">Gemini 1.5</option>
+            </select>
+            <input type="text" id="user-input" placeholder="Enter your Test Case details..." autofocus>
+            <button id="send-button" aria-label="Send">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+            </button>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        const chatMessages = document.getElementById('chat-messages');
+        const userInput = document.getElementById('user-input');
+        const sendButton = document.getElementById('send-button');
+        let isBotResponding = false;
+        let sessionId = localStorage.getItem('session_id') || null;
+        console.log(sessionId);
+        function addMessage(message, isUser) {
+            const container = document.createElement('div');
+            container.className = `message-container ${isUser ? 'user-container' : 'bot-container'}`;
+
+            // Create avatar
+            const avatar = document.createElement('div');
+            avatar.className = `message-avatar ${isUser ? 'user-avatar' : 'bot-avatar'}`;
+            avatar.textContent = isUser ? "👤" : "N";
+            container.appendChild(avatar);
+
+            // Create message bubble
+            const bubble = document.createElement('div');
+            bubble.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+    
+            // Add text content
+            const textDiv = document.createElement('div');
+            textDiv.className = 'message-text';
+            textDiv.innerHTML = marked.parse(message);
+            bubble.appendChild(textDiv);
+            //messageDiv.innerHTML = marked.parse(message);
+            
+            if (!isUser) {
+                // Add timestamp for bot messages
+                const timestamp = document.createElement('div');
+                timestamp.className = 'message-timestamp';
+                timestamp.textContent = new Date().toLocaleString();
+                bubble.appendChild(timestamp);
+                const buttonContainer = document.createElement('div');
+                buttonContainer.className = 'message-actions';
+                
+                buttonContainer.innerHTML = `
+                    <button class="action-btn" data-tooltip="Copy" onclick="copyMessage(this)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M8 4v12h12V4H8zM6 2h16v16H6V2zM4 6H2v18h18v-2"/>
+                        </svg>
+                    </button>
+                    <button class="action-btn" data-tooltip="Execute" onclick="handleExecute(this)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M5 12l5 5 10-10M5 12l5-5 10 10"/>
+                        </svg>
+                    </button>
+                    `;
+            
+                   bubble.appendChild(buttonContainer);
+                }
+
+        
+                container.appendChild(bubble);
+                chatMessages.appendChild(container);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                return container;
+        }
+
+
+        function copyMessage(button) {
+            const messageContainer = button.closest('.message');
+            const textElement = messageContainer.querySelector('.message-text');
+
+            const clonedText = textElement.cloneNode(true);
+            const timestamp = clonedText.querySelector('.message-timestamp');
+            if (timestamp) {
+                timestamp.remove();
+            }
+            navigator.clipboard.writeText(clonedText.textContent.trim());
+            
+            const originalTooltip = button.getAttribute('data-tooltip');
+            button.setAttribute('data-tooltip', 'Copied!');
+            setTimeout(() => {
+                    button.setAttribute('data-tooltip', originalTooltip);
+            }, 2000);
+        }
+
+        function handleExecute(button) {
+            // TODO: Implement execute functionality
+            console.log('Execute button clicked - implement logic here');
+            const message = button.closest('.message').textContent.replace('CopyExecute', '');
+            // Add future implementation code here
+        }
+
+        function addLoadingMessage() {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message bot-message loading-message';
+    
+            const dotsContainer = document.createElement('div');
+            dotsContainer.className = 'loading-dots';
+            
+            dotsContainer.innerHTML = `
+                <div></div>
+                <div></div>
+                <div></div>
+            `;
+            
+            messageDiv.appendChild(dotsContainer);
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            return messageDiv;
+        }
+
+        async function loadChatHistory() {
+            try {
+                const response = await fetch('http://localhost:5000/history', {
+                    headers: {
+                        'Session-ID': sessionId
+                    }
+                });
+                if (!response.ok) throw new Error('Failed to load chat history');
+
+                const history = await response.json();
+                console.log(history);
+                history.forEach(message => {
+                    addMessage(message.content, message.role === 'user');
+                });
+            } catch (error) {
+                console.error("Error loading chat history:", error);
+            }
+        }
+
+        async function sendMessage() {
+            if (isBotResponding) return;
+            
+            sessionId = localStorage.getItem('session_id') || null;
+            console.log(sessionId);
+            const message = userInput.value.trim();
+            const model = document.getElementById("model-selector").value;
+            if (!message) return;
+
+            isBotResponding = true;
+            sendButton.disabled = true;
+            addMessage(message, true);
+            userInput.value = '';
+            
+            // Add loading message
+            const loadingMessage = addLoadingMessage();
+
+            try {
+                const response = await fetch('http://localhost:5000/generate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Session-ID': sessionId,
+                    },
+                    body: JSON.stringify({ message, model }),
+                });
+
+                if (!response.ok) throw new Error('Server error');
+                let reply = await response.json();
+                // console.log(data);
+                let data = reply.content
+                data = data.replace(/\n/g, '\n\n');
+                loadingMessage.remove();
+                addMessage(data, false);
+
+                if(reply.session_id && !sessionId) {
+                    sessionId = reply.session_id;
+                    localStorage.setItem('session_id', sessionId);
+                }
+                
+            } catch (error) {
+                loadingMessage.remove();
+                addMessage('Error: Could not generate response', false);
+                console.error('Error:', error);
+            } finally {
+                isBotResponding = false;
+                sendButton.disabled = false;
+            }
+        }
+
+        window.onload = loadChatHistory;
+        sendButton.addEventListener('click', sendMessage);
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,2720 @@
+A Bundle object in NCC is something that defines the rating plan that a subscriber can subscribe to. The bundle object contains attributes that define attributes like the renewal peridicity, fee, charging rules etc.
+The 'Create Bundle' REST API is used to create a bundle in the NCC system. Here is the Full JSON payload of the create bundle API:
+
+{
+  "securityDomain": "string",
+  "distList": [
+    "string"
+  ],
+  "deleteDistList": [
+    "string"
+  ],
+  "serviceProvider": "string",
+  "entityVersionDetails": {
+    "majorVersion": 1000000,
+    "minorVersion": 999999,
+    "patchVersion": 999999,
+    "baseActiveVersion": "string",
+    "startTime": 9223372036854776000,
+    "smEntityState": "DRAFT",
+    "forceVersioning": true,
+    "timeZoneVersioning": true
+  },
+  "description": "string",
+  "versionNote": "string",
+  "publishStatus": "DRAFT",
+  "updateType": "PROVISION",
+  "name": "8Wg0T3qcG!qtSP|y1-STQ",
+  "icon": "string",
+  "fee": 9223372036854776000,
+  "lifeCycleNames": {
+    "securityDomain": "string",
+    "distList": [
+      "string"
+    ],
+    "deleteDistList": [
+      "string"
+    ],
+    "entry": [
+      {
+        "securityDomain": "string",
+        "distList": [
+          "string"
+        ],
+        "deleteDistList": [
+          "string"
+        ],
+        "key": "ENTITY",
+        "value": "string",
+        "id": "string"
+      }
+    ],
+    "id": "string"
+  },
+  "chargingServiceObjList": [
+    {
+      "securityDomain": "string",
+      "distList": [
+        "string"
+      ],
+      "deleteDistList": [
+        "string"
+      ],
+      "serviceProvider": "string",
+      "entityVersionDetails": {
+        "majorVersion": 1000000,
+        "minorVersion": 999999,
+        "patchVersion": 999999,
+        "baseActiveVersion": "string",
+        "startTime": 9223372036854776000,
+        "smEntityState": "DRAFT",
+        "forceVersioning": true,
+        "timeZoneVersioning": true
+      },
+      "description": "string",
+      "versionNote": "string",
+      "publishStatus": "DRAFT",
+      "updateType": "PROVISION",
+      "passes": [
+        {
+          "securityDomain": "string",
+          "distList": [
+            "string"
+          ],
+          "deleteDistList": [
+            "string"
+          ],
+          "tariff": {
+            "id": "string",
+            "rules": [
+              {
+                "description": "string",
+                "conditionContainer": {
+                  "subContainers": [
+                    "string"
+                  ],
+                  "conditions": [
+                    {
+                      "criteria": {
+                        "name": "string",
+                        "sourceContext": "string"
+                      },
+                      "criteriaArguments": [
+                        {
+                          "name": "string",
+                          "value": {
+                            "type": "STRING",
+                            "value": "string"
+                          },
+                          "valueArguments": [
+                            "string"
+                          ]
+                        }
+                      ],
+                      "criteriaAdjustOperator": "ADD",
+                      "criteriaAdjustValue": [
+                        {
+                          "data": {
+                            "type": "STRING",
+                            "value": "string"
+                          },
+                          "arguments": [
+                            {
+                              "name": "string",
+                              "value": {
+                                "type": "STRING",
+                                "value": "string"
+                              },
+                              "valueArguments": [
+                                "string"
+                              ]
+                            }
+                          ]
+                        }
+                      ],
+                      "operator": "EQUAL",
+                      "value": {
+                        "type": "STRING",
+                        "value": "string"
+                      },
+                      "valueArguments": [
+                        {
+                          "name": "string",
+                          "value": {
+                            "type": "STRING",
+                            "value": "string"
+                          },
+                          "valueArguments": [
+                            "string"
+                          ]
+                        }
+                      ],
+                      "adjustOperator": "ADD",
+                      "adjustValue": [
+                        {
+                          "data": {
+                            "type": "STRING",
+                            "value": "string"
+                          },
+                          "arguments": [
+                            {
+                              "name": "string",
+                              "value": {
+                                "type": "STRING",
+                                "value": "string"
+                              },
+                              "valueArguments": [
+                                "string"
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "operator": "AND"
+                },
+                "actions": [
+                  {
+                    "attributeInfo": {
+                      "name": "string",
+                      "resultContext": "string"
+                    },
+                    "parameters": [
+                      {
+                        "name": "string",
+                        "value": {
+                          "data": {
+                            "type": "STRING",
+                            "value": "string"
+                          },
+                          "dataArguments": [
+                            {
+                              "name": "string",
+                              "value": {
+                                "type": "STRING",
+                                "value": "string"
+                              },
+                              "valueArguments": [
+                                "string"
+                              ]
+                            }
+                          ],
+                          "adjustOperator": "ADD",
+                          "adjustData": [
+                            {
+                              "data": {
+                                "type": "STRING",
+                                "value": "string"
+                              },
+                              "arguments": [
+                                {
+                                  "name": "string",
+                                  "value": {
+                                    "type": "STRING",
+                                    "value": "string"
+                                  },
+                                  "valueArguments": [
+                                    "string"
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      }
+                    ],
+                    "resultContext": "string",
+                    "name": "string"
+                  }
+                ],
+                "name": "string"
+              }
+            ],
+            "name": "string"
+          },
+          "id": "string"
+        }
+      ],
+      "name": "H8sHSVLkkZn8T?IHMpOZLzKONQu0YD6BI?H||mOA0OA7Wmgff3V-clC2c24PGfo0.WB0tO6E",
+      "applicabilityCondition": {
+        "securityDomain": "string",
+        "distList": [
+          "string"
+        ],
+        "deleteDistList": [
+          "string"
+        ],
+        "serviceProvider": "string",
+        "id": "string",
+        "application": "string",
+        "rules": [
+          {
+            "description": "string",
+            "conditionContainer": {
+              "subContainers": [
+                "string"
+              ],
+              "conditions": [
+                {
+                  "criteria": {
+                    "name": "string",
+                    "sourceContext": "string"
+                  },
+                  "criteriaArguments": [
+                    {
+                      "name": "string",
+                      "value": {
+                        "type": "STRING",
+                        "value": "string"
+                      },
+                      "valueArguments": [
+                        "string"
+                      ]
+                    }
+                  ],
+                  "criteriaAdjustOperator": "ADD",
+                  "criteriaAdjustValue": [
+                    {
+                      "data": {
+                        "type": "STRING",
+                        "value": "string"
+                      },
+                      "arguments": [
+                        {
+                          "name": "string",
+                          "value": {
+                            "type": "STRING",
+                            "value": "string"
+                          },
+                          "valueArguments": [
+                            "string"
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "operator": "EQUAL",
+                  "value": {
+                    "type": "STRING",
+                    "value": "string"
+                  },
+                  "valueArguments": [
+                    {
+                      "name": "string",
+                      "value": {
+                        "type": "STRING",
+                        "value": "string"
+                      },
+                      "valueArguments": [
+                        "string"
+                      ]
+                    }
+                  ],
+                  "adjustOperator": "ADD",
+                  "adjustValue": [
+                    {
+                      "data": {
+                        "type": "STRING",
+                        "value": "string"
+                      },
+                      "arguments": [
+                        {
+                          "name": "string",
+                          "value": {
+                            "type": "STRING",
+                            "value": "string"
+                          },
+                          "valueArguments": [
+                            "string"
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "operator": "AND"
+            },
+            "actions": [
+              {
+                "attributeInfo": {
+                  "name": "string",
+                  "resultContext": "string"
+                },
+                "parameters": [
+                  {
+                    "name": "string",
+                    "value": {
+                      "data": {
+                        "type": "STRING",
+                        "value": "string"
+                      },
+                      "dataArguments": [
+                        {
+                          "name": "string",
+                          "value": {
+                            "type": "STRING",
+                            "value": "string"
+                          },
+                          "valueArguments": [
+                            "string"
+                          ]
+                        }
+                      ],
+                      "adjustOperator": "ADD",
+                      "adjustData": [
+                        {
+                          "data": {
+                            "type": "STRING",
+                            "value": "string"
+                          },
+                          "arguments": [
+                            {
+                              "name": "string",
+                              "value": {
+                                "type": "STRING",
+                                "value": "string"
+                              },
+                              "valueArguments": [
+                                "string"
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "resultContext": "string",
+                "name": "string"
+              }
+            ],
+            "name": "string"
+          }
+        ]
+      },
+      "priority": 0,
+      "bucketDefinition": [
+        {
+          "securityDomain": "string",
+          "distList": [
+            "string"
+          ],
+          "deleteDistList": [
+            "string"
+          ],
+          "serviceProvider": "string",
+          "configuratorProvState": "DRAFT",
+          "description": "string",
+          "name": "Lg?rTmjv95ziISUH-Ma3LVTfpYpwCj8VXa4pAohqXMPHRxN3z-R?-D?ZaQDmPxiC_Bx!Fq-eQlYU3.C2N8-jFa",
+          "unitType": {
+            "securityDomain": "string",
+            "distList": [
+              "string"
+            ],
+            "deleteDistList": [
+              "string"
+            ],
+            "serviceProvider": "string",
+            "unitTypeName": "CEqgjqs0d2xe1fRVNPVf6OjSvP5ExOTmCxOWOZY",
+            "kindOfUnit": "TIME",
+            "shortName": "string",
+            "defaultUnit": true,
+            "defaultSMUnit": true,
+            "typeConverter": {
+              "securityDomain": "string",
+              "distList": [
+                "string"
+              ],
+              "deleteDistList": [
+                "string"
+              ],
+              "serviceProvider": "string",
+              "rightSideUnit": "string",
+              "leftSideValue": 0,
+              "rightSideValue": 0,
+              "id": "string"
+            },
+            "id": "string"
+          },
+          "initialValue": 9223372036854776000,
+          "maxRollOverValue": 9223372036854776000,
+          "currentValue": 0,
+          "maxCarryOverValueOption": "PERCENTAGE",
+          "maxCarryOverValue": 9223372036854776000,
+          "thresholdProfileGroupIdList": [
+            "string"
+          ],
+          "stepThresholdProfileGroupIdList": [
+            "string"
+          ],
+          "carryOverValue": 0,
+          "renewalPeriod": "ONE_PERIOD",
+          "consumptionPriority": "REGULAR_BUCKET",
+          "isCarryOver": true,
+          "chargingStep": {
+            "securityDomain": "string",
+            "distList": [
+              "string"
+            ],
+            "deleteDistList": [
+              "string"
+            ],
+            "serviceProvider": "string",
+            "name": "string",
+            "steps": [
+              {
+                "stepSize": 0,
+                "stepFee": 0
+              }
+            ],
+            "unitType": {
+              "securityDomain": "string",
+              "distList": [
+                "string"
+              ],
+              "deleteDistList": [
+                "string"
+              ],
+              "serviceProvider": "string",
+              "unitTypeName": "gEK1ZdRGNm1lBT?9Kz3alzydV!PrJmQ",
+              "kindOfUnit": "TIME",
+              "shortName": "string",
+              "defaultUnit": true,
+              "defaultSMUnit": true,
+              "typeConverter": {
+                "securityDomain": "string",
+                "distList": [
+                  "string"
+                ],
+                "deleteDistList": [
+                  "string"
+                ],
+                "serviceProvider": "string",
+                "rightSideUnit": "string",
+                "leftSideValue": 0,
+                "rightSideValue": 0,
+                "id": "string"
+              },
+              "id": "string"
+            },
+            "lastStepUnlimited": true,
+            "description": "string",
+            "taxId": "string",
+            "taxIncluded": true,
+            "id": "string"
+          },
+          "lifeCycleName": "string",
+          "currentChargingStep": 0,
+          "hourOfDay": 25,
+          "dayOfWeek": "SUNDAY",
+          "dayOfMonth": 32,
+          "initialValueAdjMode": "DECR",
+          "id": "string",
+          "globalBkt": true
+        }
+      ],
+      "counterDefinition": [
+        {
+          "securityDomain": "string",
+          "distList": [
+            "string"
+          ],
+          "deleteDistList": [
+            "string"
+          ],
+          "serviceProvider": "string",
+          "configuratorProvState": "DRAFT",
+          "description": "string",
+          "name": "JASVMRmX.uVx3TyoFkTWtOIABp3vvltSP3ZQJofVTr7zBC?7??RhTbpa8YKd6!7Cq9LxqwBVA1KcpHtTR?w6Ylrbg DPRNN",
+          "lifeCycleName": "string",
+          "unitType": {
+            "securityDomain": "string",
+            "distList": [
+              "string"
+            ],
+            "deleteDistList": [
+              "string"
+            ],
+            "serviceProvider": "string",
+            "unitTypeName": "FNRT1d_tOhY!Bnl7HiVx?pvtaCVCw5HYn9fkQigyckPyVMxIVeoWSA_p?sX7bJxPW7HZbmGh4nd17XH1Erx6bH1",
+            "kindOfUnit": "TIME",
+            "shortName": "string",
+            "defaultUnit": true,
+            "defaultSMUnit": true,
+            "typeConverter": {
+              "securityDomain": "string",
+              "distList": [
+                "string"
+              ],
+              "deleteDistList": [
+                "string"
+              ],
+              "serviceProvider": "string",
+              "rightSideUnit": "string",
+              "leftSideValue": 0,
+              "rightSideValue": 0,
+              "id": "string"
+            },
+            "id": "string"
+          },
+          "counterType": "USAGE",
+          "counterScope": "ALL",
+          "counterConsumptionType": "ALL",
+          "counterConsumptionList": [
+            "string"
+          ],
+          "thresholdProfileGroupIds": [
+            "string"
+          ],
+          "ocsPolicyCounter": true,
+          "resourceBased": true,
+          "bktConsumType": "REGULAR_BUCKET",
+          "applicabilityCondition": {
+            "securityDomain": "string",
+            "distList": [
+              "string"
+            ],
+            "deleteDistList": [
+              "string"
+            ],
+            "serviceProvider": "string",
+            "id": "string",
+            "application": "string",
+            "rules": [
+              {
+                "description": "string",
+                "conditionContainer": {
+                  "subContainers": [
+                    "string"
+                  ],
+                  "conditions": [
+                    {
+                      "criteria": {
+                        "name": "string",
+                        "sourceContext": "string"
+                      },
+                      "criteriaArguments": [
+                        {
+                          "name": "string",
+                          "value": {
+                            "type": "STRING",
+                            "value": "string"
+                          },
+                          "valueArguments": [
+                            "string"
+                          ]
+                        }
+                      ],
+                      "criteriaAdjustOperator": "ADD",
+                      "criteriaAdjustValue": [
+                        {
+                          "data": {
+                            "type": "STRING",
+                            "value": "string"
+                          },
+                          "arguments": [
+                            {
+                              "name": "string",
+                              "value": {
+                                "type": "STRING",
+                                "value": "string"
+                              },
+                              "valueArguments": [
+                                "string"
+                              ]
+                            }
+                          ]
+                        }
+                      ],
+                      "operator": "EQUAL",
+                      "value": {
+                        "type": "STRING",
+                        "value": "string"
+                      },
+                      "valueArguments": [
+                        {
+                          "name": "string",
+                          "value": {
+                            "type": "STRING",
+                            "value": "string"
+                          },
+                          "valueArguments": [
+                            "string"
+                          ]
+                        }
+                      ],
+                      "adjustOperator": "ADD",
+                      "adjustValue": [
+                        {
+                          "data": {
+                            "type": "STRING",
+                            "value": "string"
+                          },
+                          "arguments": [
+                            {
+                              "name": "string",
+                              "value": {
+                                "type": "STRING",
+                                "value": "string"
+                              },
+                              "valueArguments": [
+                                "string"
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "operator": "AND"
+                },
+                "actions": [
+                  {
+                    "attributeInfo": {
+                      "name": "string",
+                      "resultContext": "string"
+                    },
+                    "parameters": [
+                      {
+                        "name": "string",
+                        "value": {
+                          "data": {
+                            "type": "STRING",
+                            "value": "string"
+                          },
+                          "dataArguments": [
+                            {
+                              "name": "string",
+                              "value": {
+                                "type": "STRING",
+                                "value": "string"
+                              },
+                              "valueArguments": [
+                                "string"
+                              ]
+                            }
+                          ],
+                          "adjustOperator": "ADD",
+                          "adjustData": [
+                            {
+                              "data": {
+                                "type": "STRING",
+                                "value": "string"
+                              },
+                              "arguments": [
+                                {
+                                  "name": "string",
+                                  "value": {
+                                    "type": "STRING",
+                                    "value": "string"
+                                  },
+                                  "valueArguments": [
+                                    "string"
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      }
+                    ],
+                    "resultContext": "string",
+                    "name": "string"
+                  }
+                ],
+                "name": "string"
+              }
+            ]
+          },
+          "fetchNonCSRecords": true,
+          "capIds": [
+            "string"
+          ],
+          "deviceId": "string",
+          "counterDeviceIds": [
+            "string"
+          ],
+          "ruleTables": [
+            {
+              "ruleSetNames": [
+                "string"
+              ],
+              "name": "string",
+              "rules": [
+                {
+                  "name": "string",
+                  "isEnabled": true,
+                  "conditionContainer": {
+                    "subContainers": [
+                      "string"
+                    ],
+                    "conditions": [
+                      {
+                        "criteria": {
+                          "name": "string",
+                          "sourceContext": "string"
+                        },
+                        "criteriaArguments": [
+                          {
+                            "name": "string",
+                            "value": {
+                              "type": "STRING",
+                              "value": "string"
+                            },
+                            "valueArguments": [
+                              "string"
+                            ]
+                          }
+                        ],
+                        "criteriaAdjustOperator": "ADD",
+                        "criteriaAdjustValue": [
+                          {
+                            "data": {
+                              "type": "STRING",
+                              "value": "string"
+                            },
+                            "arguments": [
+                              {
+                                "name": "string",
+                                "value": {
+                                  "type": "STRING",
+                                  "value": "string"
+                                },
+                                "valueArguments": [
+                                  "string"
+                                ]
+                              }
+                            ]
+                          }
+                        ],
+                        "operator": "EQUAL",
+                        "value": {
+                          "type": "STRING",
+                          "value": "string"
+                        },
+                        "valueArguments": [
+                          {
+                            "name": "string",
+                            "value": {
+                              "type": "STRING",
+                              "value": "string"
+                            },
+                            "valueArguments": [
+                              "string"
+                            ]
+                          }
+                        ],
+                        "adjustOperator": "ADD",
+                        "adjustValue": [
+                          {
+                            "data": {
+                              "type": "STRING",
+                              "value": "string"
+                            },
+                            "arguments": [
+                              {
+                                "name": "string",
+                                "value": {
+                                  "type": "STRING",
+                                  "value": "string"
+                                },
+                                "valueArguments": [
+                                  "string"
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ],
+                    "operator": "AND"
+                  },
+                  "actions": [
+                    {
+                      "attributeInfo": {
+                        "name": "string",
+                        "resultContext": "string"
+                      },
+                      "parameters": [
+                        {
+                          "name": "string",
+                          "value": {
+                            "data": {
+                              "type": "STRING",
+                              "value": "string"
+                            },
+                            "dataArguments": [
+                              {
+                                "name": "string",
+                                "value": {
+                                  "type": "STRING",
+                                  "value": "string"
+                                },
+                                "valueArguments": [
+                                  "string"
+                                ]
+                              }
+                            ],
+                            "adjustOperator": "ADD",
+                            "adjustData": [
+                              {
+                                "data": {
+                                  "type": "STRING",
+                                  "value": "string"
+                                },
+                                "arguments": [
+                                  {
+                                    "name": "string",
+                                    "value": {
+                                      "type": "STRING",
+                                      "value": "string"
+                                    },
+                                    "valueArguments": [
+                                      "string"
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        }
+                      ],
+                      "resultContext": "string",
+                      "name": "string"
+                    }
+                  ],
+                  "domainPreference": 0,
+                  "description": "string"
+                }
+              ],
+              "topLevelTable": true
+            }
+          ],
+          "groupId": "string",
+          "updateSession": 0,
+          "updateSessionResult": 0,
+          "overageThresholdProfileGroupIdList": [
+            "string"
+          ],
+          "usageLimit": 0,
+          "overageLimit": 0,
+          "overageFee": [
+            0
+          ],
+          "maxOverageCount": 0,
+          "alignGranularity": "TRUE",
+          "currentValue": 0,
+          "hourOfDay": 25,
+          "dayOfWeek": "SUNDAY",
+          "dayOfMonth": 32,
+          "custom": true,
+          "generateOverageEDR": true,
+          "id": "string",
+          "thresholdProfileGroupIdList": [
+            "string"
+          ]
+        }
+      ],
+      "globalCounterDef": [
+        {
+          "securityDomain": "string",
+          "distList": [
+            "string"
+          ],
+          "deleteDistList": [
+            "string"
+          ],
+          "serviceProvider": "string",
+          "configuratorProvState": "DRAFT",
+          "description": "string",
+          "name": "N3p0I.2k44P_iUqfGJQuyi31k4.92flg4kemuD_DSp5Ko.6?t6",
+          "lifeCycleName": "string",
+          "unitType": {
+            "securityDomain": "string",
+            "distList": [
+              "string"
+            ],
+            "deleteDistList": [
+              "string"
+            ],
+            "serviceProvider": "string",
+            "unitTypeName": "jmFt4h3B1h-t26iZeB20.2IyqWgAEhJhFB7moY4YiJDq1pCRTlGuiXdcv0R8XyM?VCe4RL8QLN4lczHM2cme?whN5zm2jv",
+            "kindOfUnit": "TIME",
+            "shortName": "string",
+            "defaultUnit": true,
+            "defaultSMUnit": true,
+            "typeConverter": {
+              "securityDomain": "string",
+              "distList": [
+                "string"
+              ],
+              "deleteDistList": [
+                "string"
+              ],
+              "serviceProvider": "string",
+              "rightSideUnit": "string",
+              "leftSideValue": 0,
+              "rightSideValue": 0,
+              "id": "string"
+            },
+            "id": "string"
+          },
+          "counterType": "USAGE",
+          "counterScope": "ALL",
+          "counterConsumptionType": "ALL",
+          "counterConsumptionList": [
+            "string"
+          ],
+          "thresholdProfileGroupIds": [
+            "string"
+          ],
+          "ocsPolicyCounter": true,
+          "resourceBased": true,
+          "bktConsumType": "REGULAR_BUCKET",
+          "applicabilityCondition": {
+            "securityDomain": "string",
+            "distList": [
+              "string"
+            ],
+            "deleteDistList": [
+              "string"
+            ],
+            "serviceProvider": "string",
+            "id": "string",
+            "application": "string",
+            "rules": [
+              {
+                "description": "string",
+                "conditionContainer": {
+                  "subContainers": [
+                    "string"
+                  ],
+                  "conditions": [
+                    {
+                      "criteria": {
+                        "name": "string",
+                        "sourceContext": "string"
+                      },
+                      "criteriaArguments": [
+                        {
+                          "name": "string",
+                          "value": {
+                            "type": "STRING",
+                            "value": "string"
+                          },
+                          "valueArguments": [
+                            "string"
+                          ]
+                        }
+                      ],
+                      "criteriaAdjustOperator": "ADD",
+                      "criteriaAdjustValue": [
+                        {
+                          "data": {
+                            "type": "STRING",
+                            "value": "string"
+                          },
+                          "arguments": [
+                            {
+                              "name": "string",
+                              "value": {
+                                "type": "STRING",
+                                "value": "string"
+                              },
+                              "valueArguments": [
+                                "string"
+                              ]
+                            }
+                          ]
+                        }
+                      ],
+                      "operator": "EQUAL",
+                      "value": {
+                        "type": "STRING",
+                        "value": "string"
+                      },
+                      "valueArguments": [
+                        {
+                          "name": "string",
+                          "value": {
+                            "type": "STRING",
+                            "value": "string"
+                          },
+                          "valueArguments": [
+                            "string"
+                          ]
+                        }
+                      ],
+                      "adjustOperator": "ADD",
+                      "adjustValue": [
+                        {
+                          "data": {
+                            "type": "STRING",
+                            "value": "string"
+                          },
+                          "arguments": [
+                            {
+                              "name": "string",
+                              "value": {
+                                "type": "STRING",
+                                "value": "string"
+                              },
+                              "valueArguments": [
+                                "string"
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "operator": "AND"
+                },
+                "actions": [
+                  {
+                    "attributeInfo": {
+                      "name": "string",
+                      "resultContext": "string"
+                    },
+                    "parameters": [
+                      {
+                        "name": "string",
+                        "value": {
+                          "data": {
+                            "type": "STRING",
+                            "value": "string"
+                          },
+                          "dataArguments": [
+                            {
+                              "name": "string",
+                              "value": {
+                                "type": "STRING",
+                                "value": "string"
+                              },
+                              "valueArguments": [
+                                "string"
+                              ]
+                            }
+                          ],
+                          "adjustOperator": "ADD",
+                          "adjustData": [
+                            {
+                              "data": {
+                                "type": "STRING",
+                                "value": "string"
+                              },
+                              "arguments": [
+                                {
+                                  "name": "string",
+                                  "value": {
+                                    "type": "STRING",
+                                    "value": "string"
+                                  },
+                                  "valueArguments": [
+                                    "string"
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      }
+                    ],
+                    "resultContext": "string",
+                    "name": "string"
+                  }
+                ],
+                "name": "string"
+              }
+            ]
+          },
+          "fetchNonCSRecords": true,
+          "capIds": [
+            "string"
+          ],
+          "deviceId": "string",
+          "counterDeviceIds": [
+            "string"
+          ],
+          "ruleTables": [
+            {
+              "ruleSetNames": [
+                "string"
+              ],
+              "name": "string",
+              "rules": [
+                {
+                  "name": "string",
+                  "isEnabled": true,
+                  "conditionContainer": {
+                    "subContainers": [
+                      "string"
+                    ],
+                    "conditions": [
+                      {
+                        "criteria": {
+                          "name": "string",
+                          "sourceContext": "string"
+                        },
+                        "criteriaArguments": [
+                          {
+                            "name": "string",
+                            "value": {
+                              "type": "STRING",
+                              "value": "string"
+                            },
+                            "valueArguments": [
+                              "string"
+                            ]
+                          }
+                        ],
+                        "criteriaAdjustOperator": "ADD",
+                        "criteriaAdjustValue": [
+                          {
+                            "data": {
+                              "type": "STRING",
+                              "value": "string"
+                            },
+                            "arguments": [
+                              {
+                                "name": "string",
+                                "value": {
+                                  "type": "STRING",
+                                  "value": "string"
+                                },
+                                "valueArguments": [
+                                  "string"
+                                ]
+                              }
+                            ]
+                          }
+                        ],
+                        "operator": "EQUAL",
+                        "value": {
+                          "type": "STRING",
+                          "value": "string"
+                        },
+                        "valueArguments": [
+                          {
+                            "name": "string",
+                            "value": {
+                              "type": "STRING",
+                              "value": "string"
+                            },
+                            "valueArguments": [
+                              "string"
+                            ]
+                          }
+                        ],
+                        "adjustOperator": "ADD",
+                        "adjustValue": [
+                          {
+                            "data": {
+                              "type": "STRING",
+                              "value": "string"
+                            },
+                            "arguments": [
+                              {
+                                "name": "string",
+                                "value": {
+                                  "type": "STRING",
+                                  "value": "string"
+                                },
+                                "valueArguments": [
+                                  "string"
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ],
+                    "operator": "AND"
+                  },
+                  "actions": [
+                    {
+                      "attributeInfo": {
+                        "name": "string",
+                        "resultContext": "string"
+                      },
+                      "parameters": [
+                        {
+                          "name": "string",
+                          "value": {
+                            "data": {
+                              "type": "STRING",
+                              "value": "string"
+                            },
+                            "dataArguments": [
+                              {
+                                "name": "string",
+                                "value": {
+                                  "type": "STRING",
+                                  "value": "string"
+                                },
+                                "valueArguments": [
+                                  "string"
+                                ]
+                              }
+                            ],
+                            "adjustOperator": "ADD",
+                            "adjustData": [
+                              {
+                                "data": {
+                                  "type": "STRING",
+                                  "value": "string"
+                                },
+                                "arguments": [
+                                  {
+                                    "name": "string",
+                                    "value": {
+                                      "type": "STRING",
+                                      "value": "string"
+                                    },
+                                    "valueArguments": [
+                                      "string"
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        }
+                      ],
+                      "resultContext": "string",
+                      "name": "string"
+                    }
+                  ],
+                  "domainPreference": 0,
+                  "description": "string"
+                }
+              ],
+              "topLevelTable": true
+            }
+          ],
+          "groupId": "string",
+          "updateSession": 0,
+          "updateSessionResult": 0,
+          "overageThresholdProfileGroupIdList": [
+            "string"
+          ],
+          "usageLimit": 0,
+          "overageLimit": 0,
+          "overageFee": [
+            0
+          ],
+          "maxOverageCount": 0,
+          "alignGranularity": "TRUE",
+          "currentValue": 0,
+          "hourOfDay": 25,
+          "dayOfWeek": "SUNDAY",
+          "dayOfMonth": 32,
+          "custom": true,
+          "generateOverageEDR": true,
+          "id": "string",
+          "thresholdProfileGroupIdList": [
+            "string"
+          ]
+        }
+      ],
+      "globalBucketDef": [
+        {
+          "securityDomain": "string",
+          "distList": [
+            "string"
+          ],
+          "deleteDistList": [
+            "string"
+          ],
+          "serviceProvider": "string",
+          "configuratorProvState": "DRAFT",
+          "description": "string",
+          "name": "-vWyX9FHY.VXiZ6L7Q",
+          "unitType": {
+            "securityDomain": "string",
+            "distList": [
+              "string"
+            ],
+            "deleteDistList": [
+              "string"
+            ],
+            "serviceProvider": "string",
+            "unitTypeName": "4G.HbSOibphxo",
+            "kindOfUnit": "TIME",
+            "shortName": "string",
+            "defaultUnit": true,
+            "defaultSMUnit": true,
+            "typeConverter": {
+              "securityDomain": "string",
+              "distList": [
+                "string"
+              ],
+              "deleteDistList": [
+                "string"
+              ],
+              "serviceProvider": "string",
+              "rightSideUnit": "string",
+              "leftSideValue": 0,
+              "rightSideValue": 0,
+              "id": "string"
+            },
+            "id": "string"
+          },
+          "initialValue": 9223372036854776000,
+          "maxRollOverValue": 9223372036854776000,
+          "currentValue": 0,
+          "maxCarryOverValueOption": "PERCENTAGE",
+          "maxCarryOverValue": 9223372036854776000,
+          "thresholdProfileGroupIdList": [
+            "string"
+          ],
+          "stepThresholdProfileGroupIdList": [
+            "string"
+          ],
+          "carryOverValue": 0,
+          "renewalPeriod": "ONE_PERIOD",
+          "consumptionPriority": "REGULAR_BUCKET",
+          "isCarryOver": true,
+          "chargingStep": {
+            "securityDomain": "string",
+            "distList": [
+              "string"
+            ],
+            "deleteDistList": [
+              "string"
+            ],
+            "serviceProvider": "string",
+            "name": "string",
+            "steps": [
+              {
+                "stepSize": 0,
+                "stepFee": 0
+              }
+            ],
+            "unitType": {
+              "securityDomain": "string",
+              "distList": [
+                "string"
+              ],
+              "deleteDistList": [
+                "string"
+              ],
+              "serviceProvider": "string",
+              "unitTypeName": "-uVrobSNdfNGPLXRdJB5ERM.lM?U7m4vcgjqJLI!ooVrt0zcn08Zyhsc6TQI2H.vTaIKgelB0f5qkV!1nNrZr7N3zqm8",
+              "kindOfUnit": "TIME",
+              "shortName": "string",
+              "defaultUnit": true,
+              "defaultSMUnit": true,
+              "typeConverter": {
+                "securityDomain": "string",
+                "distList": [
+                  "string"
+                ],
+                "deleteDistList": [
+                  "string"
+                ],
+                "serviceProvider": "string",
+                "rightSideUnit": "string",
+                "leftSideValue": 0,
+                "rightSideValue": 0,
+                "id": "string"
+              },
+              "id": "string"
+            },
+            "lastStepUnlimited": true,
+            "description": "string",
+            "taxId": "string",
+            "taxIncluded": true,
+            "id": "string"
+          },
+          "lifeCycleName": "string",
+          "currentChargingStep": 0,
+          "hourOfDay": 25,
+          "dayOfWeek": "SUNDAY",
+          "dayOfMonth": 32,
+          "initialValueAdjMode": "DECR",
+          "id": "string",
+          "globalBkt": true
+        }
+      ],
+      "rateDef": [
+        {
+          "securityDomain": "string",
+          "distList": [
+            "string"
+          ],
+          "deleteDistList": [
+            "string"
+          ],
+          "serviceProvider": "string",
+          "configuratorProvState": "DRAFT",
+          "description": "string",
+          "chargingStep": [
+            {
+              "stepType": "FIXED_COST",
+              "cost": 0,
+              "quantity": 9223372036854776000,
+              "duration": 0,
+              "granularity": 0,
+              "applyFixedFeeOnSwitchToRate": true
+            }
+          ],
+          "name": "Gjn6Ogj0-QNjBJFLXuTsxCVLXNEl!HtZ15kJ6lrDL",
+          "connectionCost": 9223372036854776000,
+          "rateType": {
+            "securityDomain": "string",
+            "distList": [
+              "string"
+            ],
+            "deleteDistList": [
+              "string"
+            ],
+            "serviceProvider": "string",
+            "unitTypeName": "j.E2VfZiY-BbGdZMbh2dgNS_ZTSaX7ZHotPtbL2ZL",
+            "kindOfUnit": "TIME",
+            "shortName": "string",
+            "defaultUnit": true,
+            "defaultSMUnit": true,
+            "typeConverter": {
+              "securityDomain": "string",
+              "distList": [
+                "string"
+              ],
+              "deleteDistList": [
+                "string"
+              ],
+              "serviceProvider": "string",
+              "rightSideUnit": "string",
+              "leftSideValue": 0,
+              "rightSideValue": 0,
+              "id": "string"
+            },
+            "id": "string"
+          },
+          "granularityType": {
+            "securityDomain": "string",
+            "distList": [
+              "string"
+            ],
+            "deleteDistList": [
+              "string"
+            ],
+            "serviceProvider": "string",
+            "unitTypeName": "5K1h-ag?5O3wTcSzh2X3fFTY!OF_P4B?3hDgS75RTyp.TEXvEG35_RsCBSiwmOeIlJWEdIu9HdP36N4BE3KAt7?H8",
+            "kindOfUnit": "TIME",
+            "shortName": "string",
+            "defaultUnit": true,
+            "defaultSMUnit": true,
+            "typeConverter": {
+              "securityDomain": "string",
+              "distList": [
+                "string"
+              ],
+              "deleteDistList": [
+                "string"
+              ],
+              "serviceProvider": "string",
+              "rightSideUnit": "string",
+              "leftSideValue": 0,
+              "rightSideValue": 0,
+              "id": "string"
+            },
+            "id": "string"
+          },
+          "versionField": "string",
+          "taxId": "string",
+          "taxIncluded": true
+        }
+      ],
+      "bucketIds": [
+        "string"
+      ],
+      "counterIds": [
+        "string"
+      ],
+      "category": "string",
+      "usageType": "NORMAL",
+      "secondaryBalanceForFee": "FALSE",
+      "id": "string",
+      "versionedId": "string"
+    }
+  ],
+  "discountList": [
+    {
+      "securityDomain": "string",
+      "distList": [
+        "string"
+      ],
+      "deleteDistList": [
+        "string"
+      ],
+      "serviceProvider": "string",
+      "name": "FWOrSAJnHobstc5ipZtx4r4jrj8Fo_lpsNedBiKL-0-wcABGnbVIMux!YP9?nmKE!SG?ddYHRKX6_SAPFGGUqraUw1d3vksRHqk8",
+      "bundleFeeDiscountType": "NONE",
+      "bundleFeeDiscount": 0,
+      "renewalDiscountType": "NONE",
+      "renewalDiscount": 0,
+      "startTime": 0,
+      "endTime": 0,
+      "discountedPeriods": 0,
+      "description": "string",
+      "discPriority": 0,
+      "id": "string",
+      "bundleNames": [
+        "string"
+      ],
+      "chargeFeeDiscountType": "NONE",
+      "chargeFeeDiscount": 0
+    }
+  ],
+  "chargingServiceList": [
+    "string"
+  ],
+  "usageControlServiceList": [
+    "string"
+  ],
+  "ucServiceList": [
+    "string"
+  ],
+  "customDataProfileList": [
+    "string"
+  ],
+  "maxRenewals": 0,
+  "feePerDevice": 0,
+  "customised": true,
+  "hourOfDay": 25,
+  "dayOfWeek": "SUNDAY",
+  "dayOfMonth": 32,
+  "bundleFeeProrateMode": "NONE",
+  "prorateOnBillingCycle": "NONE",
+  "feeReferenceForProrate": "BUNDLE_FEE_OR_FEE_OVERRIDE",
+  "bucketProrateMode": "NONE",
+  "counterProrateMode": "NONE",
+  "taxId": "qX7!skoE08-oPo?azsSdmF6JcW4.m!Q9uB1hXDc.0jMpF",
+  "taxIncluded": true,
+  "chargeMissedPeriod": true,
+  "bundleActivationType": "NORMAL",
+  "ruleTables": [
+    {
+      "ruleSetNames": [
+        "string"
+      ],
+      "name": "string",
+      "rules": [
+        {
+          "name": "string",
+          "isEnabled": true,
+          "conditionContainer": {
+            "subContainers": [
+              "string"
+            ],
+            "conditions": [
+              {
+                "criteria": {
+                  "name": "string",
+                  "sourceContext": "string"
+                },
+                "criteriaArguments": [
+                  {
+                    "name": "string",
+                    "value": {
+                      "type": "STRING",
+                      "value": "string"
+                    },
+                    "valueArguments": [
+                      "string"
+                    ]
+                  }
+                ],
+                "criteriaAdjustOperator": "ADD",
+                "criteriaAdjustValue": [
+                  {
+                    "data": {
+                      "type": "STRING",
+                      "value": "string"
+                    },
+                    "arguments": [
+                      {
+                        "name": "string",
+                        "value": {
+                          "type": "STRING",
+                          "value": "string"
+                        },
+                        "valueArguments": [
+                          "string"
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "operator": "EQUAL",
+                "value": {
+                  "type": "STRING",
+                  "value": "string"
+                },
+                "valueArguments": [
+                  {
+                    "name": "string",
+                    "value": {
+                      "type": "STRING",
+                      "value": "string"
+                    },
+                    "valueArguments": [
+                      "string"
+                    ]
+                  }
+                ],
+                "adjustOperator": "ADD",
+                "adjustValue": [
+                  {
+                    "data": {
+                      "type": "STRING",
+                      "value": "string"
+                    },
+                    "arguments": [
+                      {
+                        "name": "string",
+                        "value": {
+                          "type": "STRING",
+                          "value": "string"
+                        },
+                        "valueArguments": [
+                          "string"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "operator": "AND"
+          },
+          "actions": [
+            {
+              "attributeInfo": {
+                "name": "string",
+                "resultContext": "string"
+              },
+              "parameters": [
+                {
+                  "name": "string",
+                  "value": {
+                    "data": {
+                      "type": "STRING",
+                      "value": "string"
+                    },
+                    "dataArguments": [
+                      {
+                        "name": "string",
+                        "value": {
+                          "type": "STRING",
+                          "value": "string"
+                        },
+                        "valueArguments": [
+                          "string"
+                        ]
+                      }
+                    ],
+                    "adjustOperator": "ADD",
+                    "adjustData": [
+                      {
+                        "data": {
+                          "type": "STRING",
+                          "value": "string"
+                        },
+                        "arguments": [
+                          {
+                            "name": "string",
+                            "value": {
+                              "type": "STRING",
+                              "value": "string"
+                            },
+                            "valueArguments": [
+                              "string"
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              ],
+              "resultContext": "string",
+              "name": "string"
+            }
+          ],
+          "domainPreference": 0,
+          "description": "string"
+        }
+      ],
+      "topLevelTable": true
+    }
+  ],
+  "prorateGranularity": "DEFAULT",
+  "alignBundleRef": "string",
+  "disableTTC": true,
+  "randomizeVT": true,
+  "alignWithInputDate": true,
+  "prorationProfileId": "string",
+  "queueId": "string",
+  "maxBundleInstances": 0,
+  "nccrecord": "string",
+  "versionSettings": {
+    "versionProtectType": "NOT_PROTECTED",
+    "versionType": "IMMEDIATE"
+  },
+  "validityTime": 0,
+  "buckets": [
+    {
+      "securityDomain": "string",
+      "distList": [
+        "string"
+      ],
+      "deleteDistList": [
+        "string"
+      ],
+      "serviceProvider": "string",
+      "configuratorProvState": "DRAFT",
+      "description": "string",
+      "name": "Y3UCTpGyA5ks",
+      "unitType": {
+        "securityDomain": "string",
+        "distList": [
+          "string"
+        ],
+        "deleteDistList": [
+          "string"
+        ],
+        "serviceProvider": "string",
+        "unitTypeName": "ek6_xdtPNnqC5ZBOSYqcUnLtKeg4luIk5Q8WQIM3FQhSP0lM!zn",
+        "kindOfUnit": "TIME",
+        "shortName": "string",
+        "defaultUnit": true,
+        "defaultSMUnit": true,
+        "typeConverter": {
+          "securityDomain": "string",
+          "distList": [
+            "string"
+          ],
+          "deleteDistList": [
+            "string"
+          ],
+          "serviceProvider": "string",
+          "rightSideUnit": "string",
+          "leftSideValue": 0,
+          "rightSideValue": 0,
+          "id": "string"
+        },
+        "id": "string"
+      },
+      "initialValue": 9223372036854776000,
+      "maxRollOverValue": 9223372036854776000,
+      "currentValue": 0,
+      "maxCarryOverValueOption": "PERCENTAGE",
+      "maxCarryOverValue": 9223372036854776000,
+      "thresholdProfileGroupIdList": [
+        "string"
+      ],
+      "stepThresholdProfileGroupIdList": [
+        "string"
+      ],
+      "carryOverValue": 0,
+      "renewalPeriod": "ONE_PERIOD",
+      "consumptionPriority": "REGULAR_BUCKET",
+      "isCarryOver": true,
+      "chargingStep": {
+        "securityDomain": "string",
+        "distList": [
+          "string"
+        ],
+        "deleteDistList": [
+          "string"
+        ],
+        "serviceProvider": "string",
+        "name": "string",
+        "steps": [
+          {
+            "stepSize": 0,
+            "stepFee": 0
+          }
+        ],
+        "unitType": {
+          "securityDomain": "string",
+          "distList": [
+            "string"
+          ],
+          "deleteDistList": [
+            "string"
+          ],
+          "serviceProvider": "string",
+          "unitTypeName": "gjaWogI4L73h.gvQ-erNu-s-UrfyfEWU0tcGpXB4h9",
+          "kindOfUnit": "TIME",
+          "shortName": "string",
+          "defaultUnit": true,
+          "defaultSMUnit": true,
+          "typeConverter": {
+            "securityDomain": "string",
+            "distList": [
+              "string"
+            ],
+            "deleteDistList": [
+              "string"
+            ],
+            "serviceProvider": "string",
+            "rightSideUnit": "string",
+            "leftSideValue": 0,
+            "rightSideValue": 0,
+            "id": "string"
+          },
+          "id": "string"
+        },
+        "lastStepUnlimited": true,
+        "description": "string",
+        "taxId": "string",
+        "taxIncluded": true,
+        "id": "string"
+      },
+      "lifeCycleName": "string",
+      "currentChargingStep": 0,
+      "hourOfDay": 25,
+      "dayOfWeek": "SUNDAY",
+      "dayOfMonth": 32,
+      "initialValueAdjMode": "DECR",
+      "id": "string",
+      "globalBkt": true
+    }
+  ],
+  "counters": [
+    {
+      "securityDomain": "string",
+      "distList": [
+        "string"
+      ],
+      "deleteDistList": [
+        "string"
+      ],
+      "serviceProvider": "string",
+      "configuratorProvState": "DRAFT",
+      "description": "string",
+      "name": ".WU3Btafwka",
+      "lifeCycleName": "string",
+      "unitType": {
+        "securityDomain": "string",
+        "distList": [
+          "string"
+        ],
+        "deleteDistList": [
+          "string"
+        ],
+        "serviceProvider": "string",
+        "unitTypeName": "uX?4!2YpfhqX4sl7T_.m.50A7SFEK69mOndc159H7P1_9hzq6GswTtNgndp8Qg5",
+        "kindOfUnit": "TIME",
+        "shortName": "string",
+        "defaultUnit": true,
+        "defaultSMUnit": true,
+        "typeConverter": {
+          "securityDomain": "string",
+          "distList": [
+            "string"
+          ],
+          "deleteDistList": [
+            "string"
+          ],
+          "serviceProvider": "string",
+          "rightSideUnit": "string",
+          "leftSideValue": 0,
+          "rightSideValue": 0,
+          "id": "string"
+        },
+        "id": "string"
+      },
+      "counterType": "USAGE",
+      "counterScope": "ALL",
+      "counterConsumptionType": "ALL",
+      "counterConsumptionList": [
+        "string"
+      ],
+      "thresholdProfileGroupIds": [
+        "string"
+      ],
+      "ocsPolicyCounter": true,
+      "resourceBased": true,
+      "bktConsumType": "REGULAR_BUCKET",
+      "applicabilityCondition": {
+        "securityDomain": "string",
+        "distList": [
+          "string"
+        ],
+        "deleteDistList": [
+          "string"
+        ],
+        "serviceProvider": "string",
+        "id": "string",
+        "application": "string",
+        "rules": [
+          {
+            "description": "string",
+            "conditionContainer": {
+              "subContainers": [
+                "string"
+              ],
+              "conditions": [
+                {
+                  "criteria": {
+                    "name": "string",
+                    "sourceContext": "string"
+                  },
+                  "criteriaArguments": [
+                    {
+                      "name": "string",
+                      "value": {
+                        "type": "STRING",
+                        "value": "string"
+                      },
+                      "valueArguments": [
+                        "string"
+                      ]
+                    }
+                  ],
+                  "criteriaAdjustOperator": "ADD",
+                  "criteriaAdjustValue": [
+                    {
+                      "data": {
+                        "type": "STRING",
+                        "value": "string"
+                      },
+                      "arguments": [
+                        {
+                          "name": "string",
+                          "value": {
+                            "type": "STRING",
+                            "value": "string"
+                          },
+                          "valueArguments": [
+                            "string"
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "operator": "EQUAL",
+                  "value": {
+                    "type": "STRING",
+                    "value": "string"
+                  },
+                  "valueArguments": [
+                    {
+                      "name": "string",
+                      "value": {
+                        "type": "STRING",
+                        "value": "string"
+                      },
+                      "valueArguments": [
+                        "string"
+                      ]
+                    }
+                  ],
+                  "adjustOperator": "ADD",
+                  "adjustValue": [
+                    {
+                      "data": {
+                        "type": "STRING",
+                        "value": "string"
+                      },
+                      "arguments": [
+                        {
+                          "name": "string",
+                          "value": {
+                            "type": "STRING",
+                            "value": "string"
+                          },
+                          "valueArguments": [
+                            "string"
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "operator": "AND"
+            },
+            "actions": [
+              {
+                "attributeInfo": {
+                  "name": "string",
+                  "resultContext": "string"
+                },
+                "parameters": [
+                  {
+                    "name": "string",
+                    "value": {
+                      "data": {
+                        "type": "STRING",
+                        "value": "string"
+                      },
+                      "dataArguments": [
+                        {
+                          "name": "string",
+                          "value": {
+                            "type": "STRING",
+                            "value": "string"
+                          },
+                          "valueArguments": [
+                            "string"
+                          ]
+                        }
+                      ],
+                      "adjustOperator": "ADD",
+                      "adjustData": [
+                        {
+                          "data": {
+                            "type": "STRING",
+                            "value": "string"
+                          },
+                          "arguments": [
+                            {
+                              "name": "string",
+                              "value": {
+                                "type": "STRING",
+                                "value": "string"
+                              },
+                              "valueArguments": [
+                                "string"
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "resultContext": "string",
+                "name": "string"
+              }
+            ],
+            "name": "string"
+          }
+        ]
+      },
+      "fetchNonCSRecords": true,
+      "capIds": [
+        "string"
+      ],
+      "deviceId": "string",
+      "counterDeviceIds": [
+        "string"
+      ],
+      "ruleTables": [
+        {
+          "ruleSetNames": [
+            "string"
+          ],
+          "name": "string",
+          "rules": [
+            {
+              "name": "string",
+              "isEnabled": true,
+              "conditionContainer": {
+                "subContainers": [
+                  "string"
+                ],
+                "conditions": [
+                  {
+                    "criteria": {
+                      "name": "string",
+                      "sourceContext": "string"
+                    },
+                    "criteriaArguments": [
+                      {
+                        "name": "string",
+                        "value": {
+                          "type": "STRING",
+                          "value": "string"
+                        },
+                        "valueArguments": [
+                          "string"
+                        ]
+                      }
+                    ],
+                    "criteriaAdjustOperator": "ADD",
+                    "criteriaAdjustValue": [
+                      {
+                        "data": {
+                          "type": "STRING",
+                          "value": "string"
+                        },
+                        "arguments": [
+                          {
+                            "name": "string",
+                            "value": {
+                              "type": "STRING",
+                              "value": "string"
+                            },
+                            "valueArguments": [
+                              "string"
+                            ]
+                          }
+                        ]
+                      }
+                    ],
+                    "operator": "EQUAL",
+                    "value": {
+                      "type": "STRING",
+                      "value": "string"
+                    },
+                    "valueArguments": [
+                      {
+                        "name": "string",
+                        "value": {
+                          "type": "STRING",
+                          "value": "string"
+                        },
+                        "valueArguments": [
+                          "string"
+                        ]
+                      }
+                    ],
+                    "adjustOperator": "ADD",
+                    "adjustValue": [
+                      {
+                        "data": {
+                          "type": "STRING",
+                          "value": "string"
+                        },
+                        "arguments": [
+                          {
+                            "name": "string",
+                            "value": {
+                              "type": "STRING",
+                              "value": "string"
+                            },
+                            "valueArguments": [
+                              "string"
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "operator": "AND"
+              },
+              "actions": [
+                {
+                  "attributeInfo": {
+                    "name": "string",
+                    "resultContext": "string"
+                  },
+                  "parameters": [
+                    {
+                      "name": "string",
+                      "value": {
+                        "data": {
+                          "type": "STRING",
+                          "value": "string"
+                        },
+                        "dataArguments": [
+                          {
+                            "name": "string",
+                            "value": {
+                              "type": "STRING",
+                              "value": "string"
+                            },
+                            "valueArguments": [
+                              "string"
+                            ]
+                          }
+                        ],
+                        "adjustOperator": "ADD",
+                        "adjustData": [
+                          {
+                            "data": {
+                              "type": "STRING",
+                              "value": "string"
+                            },
+                            "arguments": [
+                              {
+                                "name": "string",
+                                "value": {
+                                  "type": "STRING",
+                                  "value": "string"
+                                },
+                                "valueArguments": [
+                                  "string"
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  "resultContext": "string",
+                  "name": "string"
+                }
+              ],
+              "domainPreference": 0,
+              "description": "string"
+            }
+          ],
+          "topLevelTable": true
+        }
+      ],
+      "groupId": "string",
+      "updateSession": 0,
+      "updateSessionResult": 0,
+      "overageThresholdProfileGroupIdList": [
+        "string"
+      ],
+      "usageLimit": 0,
+      "overageLimit": 0,
+      "overageFee": [
+        0
+      ],
+      "maxOverageCount": 0,
+      "alignGranularity": "TRUE",
+      "currentValue": 0,
+      "hourOfDay": 25,
+      "dayOfWeek": "SUNDAY",
+      "dayOfMonth": 32,
+      "custom": true,
+      "generateOverageEDR": true,
+      "id": "string",
+      "thresholdProfileGroupIdList": [
+        "string"
+      ]
+    }
+  ],
+  "renewalPriority": 0,
+  "customData": {
+    "entry": [
+      {
+        "key": "string",
+        "value": {
+          "type": "STRING",
+          "value": "string"
+        },
+        "expiryTime": 0,
+        "temInfo": {
+          "temId": "string",
+          "timer": 0,
+          "randomizedTimer": 0
+        }
+      }
+    ]
+  },
+  "aggregateViewIdList": [
+    "string"
+  ],
+  "processingType": "NONE",
+  "deleteDraftVersionsOnPublish": true,
+  "campaignStartDate": 0,
+  "campaignEndDate": 0,
+  "subscriptionEndDate": 0,
+  "renewalEndDate": 0,
+  "versionedId": "string",
+  "ucserviceObjList": [
+    {
+      "securityDomain": "string",
+      "distList": [
+        "string"
+      ],
+      "deleteDistList": [
+        "string"
+      ],
+      "serviceProvider": "string",
+      "name": "V41kPF5odT5FC3mzHJHg90cx_lhs3HGiYbyt5tZ_2jvRPSZpSFj6MRUzKUbN6KXZQ5mX2IuNIUhYG_mR4xswM!rvcedJWoL_k5Lt",
+      "priority": 0,
+      "trustedList": [
+        "string"
+      ],
+      "barredList": [
+        "string"
+      ],
+      "category": "string",
+      "applicabilityCondition": {
+        "securityDomain": "string",
+        "distList": [
+          "string"
+        ],
+        "deleteDistList": [
+          "string"
+        ],
+        "serviceProvider": "string",
+        "id": "string",
+        "application": "string",
+        "rules": [
+          {
+            "description": "string",
+            "conditionContainer": {
+              "subContainers": [
+                "string"
+              ],
+              "conditions": [
+                {
+                  "criteria": {
+                    "name": "string",
+                    "sourceContext": "string"
+                  },
+                  "criteriaArguments": [
+                    {
+                      "name": "string",
+                      "value": {
+                        "type": "STRING",
+                        "value": "string"
+                      },
+                      "valueArguments": [
+                        "string"
+                      ]
+                    }
+                  ],
+                  "criteriaAdjustOperator": "ADD",
+                  "criteriaAdjustValue": [
+                    {
+                      "data": {
+                        "type": "STRING",
+                        "value": "string"
+                      },
+                      "arguments": [
+                        {
+                          "name": "string",
+                          "value": {
+                            "type": "STRING",
+                            "value": "string"
+                          },
+                          "valueArguments": [
+                            "string"
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "operator": "EQUAL",
+                  "value": {
+                    "type": "STRING",
+                    "value": "string"
+                  },
+                  "valueArguments": [
+                    {
+                      "name": "string",
+                      "value": {
+                        "type": "STRING",
+                        "value": "string"
+                      },
+                      "valueArguments": [
+                        "string"
+                      ]
+                    }
+                  ],
+                  "adjustOperator": "ADD",
+                  "adjustValue": [
+                    {
+                      "data": {
+                        "type": "STRING",
+                        "value": "string"
+                      },
+                      "arguments": [
+                        {
+                          "name": "string",
+                          "value": {
+                            "type": "STRING",
+                            "value": "string"
+                          },
+                          "valueArguments": [
+                            "string"
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "operator": "AND"
+            },
+            "actions": [
+              {
+                "attributeInfo": {
+                  "name": "string",
+                  "resultContext": "string"
+                },
+                "parameters": [
+                  {
+                    "name": "string",
+                    "value": {
+                      "data": {
+                        "type": "STRING",
+                        "value": "string"
+                      },
+                      "dataArguments": [
+                        {
+                          "name": "string",
+                          "value": {
+                            "type": "STRING",
+                            "value": "string"
+                          },
+                          "valueArguments": [
+                            "string"
+                          ]
+                        }
+                      ],
+                      "adjustOperator": "ADD",
+                      "adjustData": [
+                        {
+                          "data": {
+                            "type": "STRING",
+                            "value": "string"
+                          },
+                          "arguments": [
+                            {
+                              "name": "string",
+                              "value": {
+                                "type": "STRING",
+                                "value": "string"
+                              },
+                              "valueArguments": [
+                                "string"
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "resultContext": "string",
+                "name": "string"
+              }
+            ],
+            "name": "string"
+          }
+        ]
+      },
+      "ucLimits": [
+        {
+          "securityDomain": "string",
+          "ucLimitId": "string",
+          "refCounterId": "string",
+          "selfCounterId": "string",
+          "applicabilityCondition": {
+            "securityDomain": "string",
+            "distList": [
+              "string"
+            ],
+            "deleteDistList": [
+              "string"
+            ],
+            "serviceProvider": "string",
+            "id": "string",
+            "application": "string",
+            "rules": [
+              {
+                "description": "string",
+                "conditionContainer": {
+                  "subContainers": [
+                    "string"
+                  ],
+                  "conditions": [
+                    {
+                      "criteria": {
+                        "name": "string",
+                        "sourceContext": "string"
+                      },
+                      "criteriaArguments": [
+                        {
+                          "name": "string",
+                          "value": {
+                            "type": "STRING",
+                            "value": "string"
+                          },
+                          "valueArguments": [
+                            "string"
+                          ]
+                        }
+                      ],
+                      "criteriaAdjustOperator": "ADD",
+                      "criteriaAdjustValue": [
+                        {
+                          "data": {
+                            "type": "STRING",
+                            "value": "string"
+                          },
+                          "arguments": [
+                            {
+                              "name": "string",
+                              "value": {
+                                "type": "STRING",
+                                "value": "string"
+                              },
+                              "valueArguments": [
+                                "string"
+                              ]
+                            }
+                          ]
+                        }
+                      ],
+                      "operator": "EQUAL",
+                      "value": {
+                        "type": "STRING",
+                        "value": "string"
+                      },
+                      "valueArguments": [
+                        {
+                          "name": "string",
+                          "value": {
+                            "type": "STRING",
+                            "value": "string"
+                          },
+                          "valueArguments": [
+                            "string"
+                          ]
+                        }
+                      ],
+                      "adjustOperator": "ADD",
+                      "adjustValue": [
+                        {
+                          "data": {
+                            "type": "STRING",
+                            "value": "string"
+                          },
+                          "arguments": [
+                            {
+                              "name": "string",
+                              "value": {
+                                "type": "STRING",
+                                "value": "string"
+                              },
+                              "valueArguments": [
+                                "string"
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "operator": "AND"
+                },
+                "actions": [
+                  {
+                    "attributeInfo": {
+                      "name": "string",
+                      "resultContext": "string"
+                    },
+                    "parameters": [
+                      {
+                        "name": "string",
+                        "value": {
+                          "data": {
+                            "type": "STRING",
+                            "value": "string"
+                          },
+                          "dataArguments": [
+                            {
+                              "name": "string",
+                              "value": {
+                                "type": "STRING",
+                                "value": "string"
+                              },
+                              "valueArguments": [
+                                "string"
+                              ]
+                            }
+                          ],
+                          "adjustOperator": "ADD",
+                          "adjustData": [
+                            {
+                              "data": {
+                                "type": "STRING",
+                                "value": "string"
+                              },
+                              "arguments": [
+                                {
+                                  "name": "string",
+                                  "value": {
+                                    "type": "STRING",
+                                    "value": "string"
+                                  },
+                                  "valueArguments": [
+                                    "string"
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      }
+                    ],
+                    "resultContext": "string",
+                    "name": "string"
+                  }
+                ],
+                "name": "string"
+              }
+            ]
+          },
+          "thresholdProfileGroupIds": [
+            "string"
+          ],
+          "ucTod": {
+            "ucListTimeOfDay": [
+              {
+                "listOfTod": [
+                  {
+                    "startTime": "string",
+                    "endTime": "string"
+                  }
+                ],
+                "ucDayOfWeek": "SUNDAY",
+                "tag": "string"
+              }
+            ]
+          },
+          "kindOfUnit": "TIME",
+          "usageLimit": 0,
+          "limitUnitType": {
+            "securityDomain": "string",
+            "distList": [
+              "string"
+            ],
+            "deleteDistList": [
+              "string"
+            ],
+            "serviceProvider": "string",
+            "unitTypeName": "WA-5GIRDK_M11ezVI13_A2chuC0BAJyVvf1Qi?YSzrp--edDUR",
+            "kindOfUnit": "TIME",
+            "shortName": "string",
+            "defaultUnit": true,
+            "defaultSMUnit": true,
+            "typeConverter": {
+              "securityDomain": "string",
+              "distList": [
+                "string"
+              ],
+              "deleteDistList": [
+                "string"
+              ],
+              "serviceProvider": "string",
+              "rightSideUnit": "string",
+              "leftSideValue": 0,
+              "rightSideValue": 0,
+              "id": "string"
+            },
+            "id": "string"
+          },
+          "overageThresholdProfileGroupIds": [
+            "string"
+          ],
+          "ucOverageLimit": 0,
+          "id": "string",
+          "selfCountersRef": [
+            "string"
+          ]
+        }
+      ],
+      "id": "string"
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+Create User REST API documentation:
+
+REST API Overview:
+	API Name: Create User
+	API URL: https://api.example.com/v1/users
+	HTTP Method: POST
+	Description: This API endpoint allows the creation of a new user in the system.
+
+Request Details:
+	Headers:
+		Content-Type: application/json
+		Authorization: Bearer {token}
+	Query Parameters:
+		includeProfile: (optional) boolean to include profile details in the response.
+
+JSON Payload:
+	{
+	  "user": {
+		"personalInfo": {
+		  "firstName": "John",
+		  "lastName": "Doe",
+		  "age": 30,
+		  "contactDetails": {
+			"email": "john.doe@example.com",
+			"phoneNumbers": [
+			  {
+				"type": "mobile",
+				"number": "+1234567890"
+			  },
+			  {
+				"type": "home",
+				"number": "+0987654321"
+			  }
+			]
+		  }
+		},
+		"address": {
+		  "street": "123 Main St",
+		  "city": "Anytown",
+		  "state": "CA",
+		  "postalCode": "12345",
+		  "country": {
+			"name": "United States",
+			"code": "US"
+		  }
+		},
+		"preferences": {
+		  "language": "en",
+		  "notifications": {
+			"email": true,
+			"sms": false,
+			"pushNotifications": true
+		  }
+		}
+	  }
+	}

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chat Interface</title>
+    <link rel="stylesheet" href="static/styles.css">
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+        <h1>Nokia Robot Test Script Generation</h1>
+        <p class="subtitle">AI-powered Robot Test Script Generator for Nokia Solutions</p>
+        </div>
+        <div class="chat-messages" id="chat-messages"></div>
+        <div class="input-container">
+            <input type="text" id="user-input" placeholder="Enter your Test Case details..." autofocus>
+            <button id="send-button" aria-label="Send">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+            </button>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        const chatMessages = document.getElementById('chat-messages');
+        const userInput = document.getElementById('user-input');
+        const sendButton = document.getElementById('send-button');
+        let isBotResponding = false;
+
+        function addMessage(message, isUser) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+            messageDiv.innerHTML = marked.parse(message);
+            
+            if (!isUser) {
+                const buttonContainer = document.createElement('div');
+                buttonContainer.className = 'message-actions';
+                
+                buttonContainer.innerHTML = `
+                    <button class="action-btn" data-tooltip="Copy" onclick="copyMessage(this)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M8 4v12h12V4H8zM6 2h16v16H6V2zM4 6H2v18h18v-2"/>
+                        </svg>
+                    </button>
+                    <button class="action-btn" data-tooltip="Execute" onclick="handleExecute(this)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M5 12l5 5 10-10M5 12l5-5 10 10"/>
+                        </svg>
+                    </button>
+                    `;
+            
+                    messageDiv.appendChild(buttonContainer);
+                }
+            
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                return messageDiv;
+        }
+
+
+        function copyMessage(button) {
+            const message = button.closest('.message').textContent.replace('CopyExecute', '');
+            navigator.clipboard.writeText(message.trim());
+            
+                // Temporary feedback
+                const originalTooltip = button.getAttribute('data-tooltip');
+                button.setAttribute('data-tooltip', 'Copied!');
+                setTimeout(() => {
+                    button.setAttribute('data-tooltip', originalTooltip);
+                }, 2000);
+        }
+
+        function handleExecute(button) {
+            // TODO: Implement execute functionality
+            console.log('Execute button clicked - implement logic here');
+            const message = button.closest('.message').textContent.replace('CopyExecute', '');
+            // Add future implementation code here
+        }
+
+        function addLoadingMessage() {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message bot-message loading-message';
+    
+            const dotsContainer = document.createElement('div');
+            dotsContainer.className = 'loading-dots';
+            
+            dotsContainer.innerHTML = `
+                <div></div>
+                <div></div>
+                <div></div>
+            `;
+            
+            messageDiv.appendChild(dotsContainer);
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            return messageDiv;
+        }
+
+        async function sendMessage() {
+            if (isBotResponding) return;
+            
+            const message = userInput.value.trim();
+            if (!message) return;
+
+            isBotResponding = true;
+            sendButton.disabled = true;
+            addMessage(message, true);
+            userInput.value = '';
+            
+            // Add loading message
+            const loadingMessage = addLoadingMessage();
+
+            try {
+                const response = await fetch('http://localhost:5000/generate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ message }),
+                });
+
+                if (!response.ok) throw new Error('Server error');
+                let data = await response.text();
+                console.log(data);
+                data = data.replace(/\n/g, '\n\n');
+                loadingMessage.remove();
+                addMessage(data, false);
+                
+            } catch (error) {
+                loadingMessage.remove();
+                addMessage('Error: Could not generate response', false);
+                console.error('Error:', error);
+            } finally {
+                isBotResponding = false;
+                sendButton.disabled = false;
+            }
+        }
+
+        sendButton.addEventListener('click', sendMessage);
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+    </script>
+</body>
+</html>
