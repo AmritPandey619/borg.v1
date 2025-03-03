@@ -1,0 +1,68 @@
+#--------LLM Configuration--------
+#For LLMGW
+#LLM_PROVIDER can be one of GEMINI, OPENAI, OPENAILIKE, LLMGW
+#LLM_PROVIDER: LLMGW
+#OPEN_AI_API_KEY: 
+#OPEN_AI_API_BASE: https://nvdc-prod-euw-llmapiorchestration-app.azurewebsites.net/v1.1/
+#MODEL_NAME: gpt-3.5-turbo-16k
+#MODEL_NAME: Llama_3_70b
+
+
+#For OpenAI or OpenAI like providers
+#LLM_PROVIDER: OPENAI
+#OPEN_AI_API_BASE: https://api.x.ai/v1
+#OPEN_AI_API_KEY: 
+#MODEL_NAME: grok-beta
+
+
+#For Gemini
+LLM_PROVIDER: GEMINI
+# GOOGLE_API_KEY: AIzaSyBofsFP8i7tZMQASm5d170y1YXX_zrlr0s
+GOOGLE_API_KEY: AIzaSyBAbzoDPpkvC78MrZSRrAds7utpaPkDErQ
+#MODEL_NAME: gemini-2.0-flash-exp
+MODEL_NAME: gemini-1.5-flash
+
+
+#For OLLAMA
+#LLM_PROVIDER: OPENAILIKE
+#OPEN_AI_API_BASE: http://127.0.0.1:11434/v1
+#MODEL_NAME: llama3.3
+
+
+TEMPERATURE: 1
+MAX_TOKENS: 16000
+TIMEOUT: 300
+MAX_RETRIES: 2
+TOP_P:
+
+#--------Embedding Configuration--------
+#For LLMGW
+#EMBEDDING_PROVIDER can be one of OLLAMA, OPENAILIKE, LLMGW
+#EMBEDDING_PROVIDER: LLMGW
+#EMBEDDING_API_BASE: https://nvdc-prod-euw-llmapiorchestration-app.azurewebsites.net/v1.1/
+#EMBEDDING_API_KEY: 
+#EMBEDDING_MODEL_NAME: Ada
+
+#For Ollama
+EMBEDDING_PROVIDER: OLLAMA
+EMBEDDING_API_BASE: http://127.0.0.1:11434
+EMBEDDING_API_KEY: ollama
+EMBEDDING_MODEL_NAME: nomic-embed-text
+
+#--------LLM gateway specific configuration--------
+#LLMGW_WORKSPACE is applicable only for LLMGW provider
+LLMGW_WORKSPACE: 
+
+#--------Vector DB--------
+PERSIST_DIRECTORY: data/db
+CHUNK_SIZE: 800
+CHUNK_OVERLAP: 200
+
+#--------RETREIVE--------
+#Query LLM to summarize retrieval context before searching vector DB [true/false]
+LLM_QUERY: true
+
+#--------GENERATE--------
+
+#--------Logging--------
+LOG_LEVEL: DEBUG
