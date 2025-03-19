@@ -7,6 +7,22 @@
     <link rel="stylesheet" href="static/styles.css">
 </head>
 <body>
+    <!-- Toggle Button Container -->
+    <div class="toggle-button-container">
+        <button id="toggle-sidebar-btn" data-tooltip="Toggle Sidebar">☰</button>
+        <button id="theme-toggle" data-tooltip="Toggle Theme">🌓</button>
+        <button id="new-chat" data-tooltip="New Chat">+</button>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <button id="new-chat-btn">New chat</button>
+        </div>
+        <h2>Chat History</h2>
+        <div class="sessions-list" id="sessions-list"></div>
+    </div>
+
     <div class="chat-container">
         <div class="chat-header">
             <img src="static/logo.svg" alt="Nokia Logo">
@@ -17,6 +33,10 @@
         </div>
         <div class="chat-messages" id="chat-messages"></div>
         <div class="input-container">
+            <select id="model-selector">
+                <option value="gemini-pro">Gemini Pro</option>
+                <option value="gemini-1.5">Gemini 1.5</option>
+            </select>
             <input type="text" id="user-input" placeholder="Enter your Test Case details..." autofocus>
             <button id="send-button" aria-label="Send">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -26,136 +46,175 @@
             </button>
         </div>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
         const chatMessages = document.getElementById('chat-messages');
         const userInput = document.getElementById('user-input');
         const sendButton = document.getElementById('send-button');
+        const sessionsList = document.getElementById('sessions-list');
+        const toggleSidebarBtn = document.getElementById('toggle-sidebar-btn');
+        const newChatBtn = document.querySelector('#new-chat-btn');
+        const newChat = document.querySelector('#new-chat');
         let isBotResponding = false;
+        let sessionId = sessionStorage.getItem('session_id') || null;
+
+        // Toggle sidebar
+        toggleSidebarBtn.addEventListener('click', () => {
+            const sidebar = document.getElementById('sidebar');
+            const toggleButtonContainer = document.querySelector('.toggle-button-container');
+            sidebar.classList.toggle('collapsed');
+            newChat.classList.toggle('show');
+            toggleButtonContainer.classList.toggle('show');
+            if (sidebar.classList.contains('collapsed')) {
+                toggleButtonContainer.style.left = '20px';
+            } else {
+                toggleButtonContainer.style.left = '200px';
+            }
+        });
+
+        // Auto-resize textarea
+        userInput.addEventListener('input', () => {
+            userInput.style.height = 'auto';
+            userInput.style.height = Math.min(userInput.scrollHeight, 200) + 'px';
+        });
 
         function addMessage(message, isUser) {
             const container = document.createElement('div');
             container.className = `message-container ${isUser ? 'user-container' : 'bot-container'}`;
 
-            // Create avatar
             const avatar = document.createElement('div');
             avatar.className = `message-avatar ${isUser ? 'user-avatar' : 'bot-avatar'}`;
             avatar.textContent = isUser ? "👤" : "N";
             container.appendChild(avatar);
 
-            // Create message bubble
-            const bubble = document.createElement('div');
-            bubble.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
-    
-            // Add text content
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+
             const textDiv = document.createElement('div');
             textDiv.className = 'message-text';
-            textDiv.innerHTML = marked.parse(message);
-            bubble.appendChild(textDiv);
-            //messageDiv.innerHTML = marked.parse(message);
-            
+            textDiv.innerHTML = isUser ? message : marked.parse(message);
+            messageDiv.appendChild(textDiv);
+
             if (!isUser) {
-                // Add timestamp for bot messages
-                const timestamp = document.createElement('div');
-                timestamp.className = 'message-timestamp';
-                timestamp.textContent = new Date().toLocaleString();
-                bubble.appendChild(timestamp);
                 const buttonContainer = document.createElement('div');
                 buttonContainer.className = 'message-actions';
-                
                 buttonContainer.innerHTML = `
-                    <button class="action-btn" data-tooltip="Copy" onclick="copyMessage(this)">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <button class="action-btn" title="Copy message" onclick="copyMessage(this)">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M8 4v12h12V4H8zM6 2h16v16H6V2zM4 6H2v18h18v-2"/>
                         </svg>
                     </button>
-                    <button class="action-btn" data-tooltip="Execute" onclick="handleExecute(this)">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <button class="action-btn" title="Execute" onclick="handleExecute(this)">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M5 12l5 5 10-10M5 12l5-5 10 10"/>
                         </svg>
                     </button>
-                    `;
-            
-                   bubble.appendChild(buttonContainer);
-                }
+                `;
+                messageDiv.appendChild(buttonContainer);
+            }
 
-        
-                container.appendChild(bubble);
-                chatMessages.appendChild(container);
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-                return container;
+            container.appendChild(messageDiv);
+            chatMessages.appendChild(container);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
-
         function copyMessage(button) {
-            const message = button.closest('.message').textContent.replace('CopyExecute', '');
-            navigator.clipboard.writeText(message.trim());
+            const messageContainer = button.closest('.message');
+            const textElement = messageContainer.querySelector('.message-text');
+            navigator.clipboard.writeText(textElement.textContent.trim());
             
-                // Temporary feedback
-                const originalTooltip = button.getAttribute('data-tooltip');
-                button.setAttribute('data-tooltip', 'Copied!');
-                setTimeout(() => {
-                    button.setAttribute('data-tooltip', originalTooltip);
-                }, 2000);
+            const originalTitle = button.title;
+            button.title = 'Copied!';
+            setTimeout(() => {
+                button.title = originalTitle;
+            }, 2000);
         }
 
         function handleExecute(button) {
-            // TODO: Implement execute functionality
             console.log('Execute button clicked - implement logic here');
-            const message = button.closest('.message').textContent.replace('CopyExecute', '');
-            // Add future implementation code here
+            const message = button.closest('.message').textContent;
         }
 
         function addLoadingMessage() {
+            const container = document.createElement('div');
+            container.className = 'message-container bot-container';
+            
+            const avatar = document.createElement('div');
+            avatar.className = 'message-avatar bot-avatar';
+            avatar.textContent = 'N';
+            container.appendChild(avatar);
+            
             const messageDiv = document.createElement('div');
-            messageDiv.className = 'message bot-message loading-message';
-    
+            messageDiv.className = 'loading-message';
+            
             const dotsContainer = document.createElement('div');
             dotsContainer.className = 'loading-dots';
-            
-            dotsContainer.innerHTML = `
-                <div></div>
-                <div></div>
-                <div></div>
-            `;
+            dotsContainer.innerHTML = '<div></div><div></div><div></div>';
             
             messageDiv.appendChild(dotsContainer);
-            chatMessages.appendChild(messageDiv);
+            container.appendChild(messageDiv);
+            chatMessages.appendChild(container);
             chatMessages.scrollTop = chatMessages.scrollHeight;
             
-            return messageDiv;
+            return container;
+        }
+
+        async function loadChatHistory(sessionid) {
+            sessionId = sessionid || sessionStorage.getItem('session_id') || null;
+            try {
+                const response = await fetch('/history', {
+                    headers: {
+                        'Session-ID': sessionId
+                    }
+                });
+                if (!response.ok) throw new Error('Failed to load chat history');
+
+                const history = await response.json();
+                chatMessages.innerHTML = '';
+                history.forEach(message => {
+                    addMessage(message.content, message.role === 'user');
+                });
+            } catch (error) {
+                console.error("Error loading chat history:", error);
+            }
         }
 
         async function sendMessage() {
             if (isBotResponding) return;
             
             const message = userInput.value.trim();
+            const model = document.getElementById("model-selector").value;
             if (!message) return;
 
             isBotResponding = true;
             sendButton.disabled = true;
             addMessage(message, true);
             userInput.value = '';
+            userInput.style.height = 'auto';
             
-            // Add loading message
             const loadingMessage = addLoadingMessage();
 
             try {
-                const response = await fetch('http://localhost:5000/generate', {
+                const response = await fetch('/generate', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Session-ID': sessionId,
                     },
-                    body: JSON.stringify({ message }),
+                    body: JSON.stringify({ message, model }),
                 });
 
                 if (!response.ok) throw new Error('Server error');
-                let data = await response.text();
-                console.log(data);
-                data = data.replace(/\n/g, '\n\n');
+                const reply = await response.json();
                 loadingMessage.remove();
-                addMessage(data, false);
-                
+                addMessage(reply.content, false);
+
+                if(reply.session_id && !sessionId) {
+                    sessionId = reply.session_id;
+                    sessionStorage.setItem('session_id', sessionId);
+                    loadSessions();
+                }
             } catch (error) {
                 loadingMessage.remove();
                 addMessage('Error: Could not generate response', false);
@@ -166,9 +225,92 @@
             }
         }
 
+        async function loadSessions() {
+            try {
+                const response = await fetch('/sessions');
+                if (!response.ok) throw new Error('Failed to load sessions');
+
+                const sessions = await response.json();
+                sessionsList.innerHTML = '';
+                sessions.forEach(session => {
+                    const sessionItem = document.createElement('div');
+                    sessionItem.className = 'session-item';
+                    if (session.session_id === sessionId) {
+                        sessionItem.classList.add('active');
+                    }
+                    sessionItem.textContent = session.title || 'New Chat';
+                    sessionItem.addEventListener('click', () => {
+                        document.querySelectorAll('.session-item').forEach(item => {
+                            item.classList.remove('active');
+                        });
+                        sessionItem.classList.add('active');
+                        sessionId = session.session_id;
+                        sessionStorage.setItem('session_id', sessionId);
+                        loadChatHistory(sessionId);
+                    });
+                    sessionsList.appendChild(sessionItem);
+                });
+            } catch (error) {
+                console.error('Error loading sessions:', error);
+            }
+        }
+
+        // New Chat functionality
+        [newChatBtn, newChat].forEach(btn => {
+            if (btn) {
+                btn.addEventListener('click', async () => {
+                    try {
+                        const response = await fetch('/generate', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Session-ID': 'null',
+                            },
+                            body: JSON.stringify({ message: '', model: 'gemini-pro' }),
+                        });
+
+                        if (!response.ok) throw new Error('Failed to start new chat');
+                        const data = await response.json();
+
+                        if (data.session_id) {
+                            sessionId = data.session_id;
+                            sessionStorage.setItem('session_id', sessionId);
+                            chatMessages.innerHTML = '';
+                            loadSessions();
+                        }
+                    } catch (error) {
+                        console.error('Error starting new chat:', error);
+                    }
+                });
+            }
+        });
+
+        // Dark/Light Mode Toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const root = document.documentElement;
+
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        if (savedTheme === 'dark') {
+            root.classList.add('dark-mode');
+        }
+
+        themeToggle.addEventListener('click', () => {
+            root.classList.toggle('dark-mode');
+            const isDark = root.classList.contains('dark-mode');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        });
+
+        window.onload = () => {
+            loadSessions();
+            loadChatHistory(sessionId);
+        };
+
         sendButton.addEventListener('click', sendMessage);
-        userInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') sendMessage();
+        userInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
         });
     </script>
 </body>

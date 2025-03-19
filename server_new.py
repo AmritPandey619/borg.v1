@@ -14,8 +14,6 @@ from pymongo import MongoClient
 from datetime import datetime, timedelta
 import psutil
 from config.config_reader import ConfigReader
-from concurrent.futures import ThreadPoolExecutor, as_completed
-import queue
 
 # import redis
 
@@ -23,7 +21,6 @@ load_dotenv()
 logger = setup_logger(__name__)
 
 app = Flask(__name__)
-
 CORS(app)  
 config_reader = ConfigReader()
 
@@ -50,85 +47,9 @@ db = mongo_client["chat_db"]  # Database name
 chat_collection = db["chat_history"] 
 sessions_collection = db["sessions"]
 
-# Thread pool configuration
-MAX_WORKERS = config_reader.get_or_default_int("MAX_WORKERS", 10)
-request_queue = queue.Queue()
-thread_pool = ThreadPoolExecutor(max_workers=MAX_WORKERS)
-
 MAX_DELETE_LIMIT = config_reader.get_or_default_int("MAX_DELETE_LIMIT", 10)
 TIME_DIFFERENCE = config_reader.get_or_default_int("TIME_DIFFERENCE", 10)
 SCHEDULER_INTERVAL = config_reader.get_or_default_int("SCHEDULER_INTERVAL", 10)
-
-def process_chat_request(data, session_id):
-    """Process a single chat request in a separate thread"""
-    try:
-        user_message = data.get('message', '').strip()
-        model_choice = data.get('model', 'gemini-pro')
-        
-        if session_id is None or session_id == "null":
-            session_id = os.urandom(16).hex()
-            session_title = "Untitled session"
-            sessions_collection.insert_one({
-                "session_id": session_id,
-                "title": session_title,
-                "created_at": datetime.utcnow()
-            })
-            logger.info(f"Created new session with ID: {session_id}")
-        else:
-            session = sessions_collection.find_one({"session_id": session_id})
-            if not session:
-                logger.error(f"Invalid session ID: {session_id}")
-                return {"error": "Invalid session ID"}, 400
-            session_title = session.get("title", "Untitled session")
-
-        if not user_message:
-            logger.info(f"Empty message received for session {session_id}")
-            return {"session_id": session_id}
-
-        # Store user message
-        user_msg = {
-            "session_id": session_id,
-            "role": "user",
-            "content": user_message,
-            "timestamp": datetime.utcnow()
-        }
-        chat_collection.insert_one(user_msg)
-        logger.info(f"Stored user message for session {session_id}")
-
-        try:
-            # Process with Borg
-            borg = Borg()
-            graph_response = borg.execute(user_message, "abcd", "abab")
-            logger.info(f"Generated response for session {session_id}: {graph_response}")
-        except Exception as e:
-            logger.error(f"Error in Borg execution: {str(e)}")
-            return {"error": "Failed to generate response"}, 500
-
-        # Store bot response
-        bot_msg = {
-            "session_id": session_id,
-            "role": "bot",
-            "content": graph_response,
-            "timestamp": datetime.utcnow()
-        }
-        chat_collection.insert_one(bot_msg)
-        logger.info(f"Stored bot response for session {session_id}")
-
-        # Update session title if needed
-        max_length = 20
-        truncated_message = user_message[:max_length] + "..." if len(user_message) > max_length else user_message
-        if session_title == "Untitled session":
-            sessions_collection.update_one(
-                {"session_id": session_id},
-                {"$set": {"title": truncated_message}}
-            )
-            logger.info(f"Updated session title for {session_id}")
-
-        return {"content": graph_response, "session_id": session_id}
-
-    except Exception as e:
-        logger.error(f"Error processing chat request: {str(e)}")
-        return {"error": "An error occurred while processing your request"}, 500
 
 @app.route("/")
 def index():
@@ -163,33 +84,67 @@ def get_chat_history():
 def chat_endpoint():
     try:
         data = request.get_json()
-        if not data:
-            logger.error("No JSON data received")
-            return jsonify({"error": "No data provided"}), 400
-            
         session_id = request.headers.get("Session-ID", None)
-        logger.info(f"Received request for session {session_id}")
+        a=session_id
+        user_message = data.get('message', '').strip()
+        model_choice = data.get('model', 'gemini-pro')
+        print('session',a)
+        # if not user_message:
+        #     return jsonify({"error": "Empty message received"}), 400
         
-        # Submit the request to the thread pool
-        future = thread_pool.submit(process_chat_request, data, session_id)
-        
-        # Wait for the result with a timeout
-        try:
-            result, status_code = future.result(timeout=30)  # 30 second timeout
-            if status_code != 200:
-                logger.error(f"Request failed with status {status_code}: {result}")
-                return jsonify(result), status_code
-            return jsonify(result), status_code
-        except TimeoutError:
-            logger.error("Request timed out")
-            return jsonify({"error": "Request timed out"}), 504
-        except Exception as e:
-            logger.error(f"Error processing request: {str(e)}")
-            return jsonify({"error": f"An error occurred: {str(e)}"}), 500
+        if session_id is None or session_id == "null":
+            session_id = os.urandom(16).hex()
+            session_title = "Untitled session"  # Default title for new session
+            sessions_collection.insert_one({
+                "session_id": session_id,
+                "title": session_title,
+                "created_at": datetime.utcnow()
+            })
+        else:
+            # Check if the session already exists
+            session = sessions_collection.find_one({"session_id": session_id})
+            if not session:
+                return jsonify({"error": "Invalid session ID"}), 400
+            session_title = session.get("title", "Untitled session")  
+            print(session_title)
 
+        if not user_message:
+            return jsonify({"session_id": session_id})
+        user_msg = {
+            "session_id": session_id,
+            "role": "user",
+            "content": user_message,
+            "timestamp": datetime.utcnow()
+        }
+        chat_collection.insert_one(user_msg)
+
+        borg = Borg()
+        graph_response = borg.execute(user_message,"abcd","abab")
+        # graph_response="hey this is a demo."
+
+        logger.info("Final response: %s", graph_response)
+        # print("Session",type(a))
+        bot_msg = {
+            "session_id": session_id,
+            "role": "bot",
+            "content": graph_response,
+            "timestamp": datetime.utcnow()
+        }
+        chat_collection.insert_one(bot_msg)
+
+        if session_title == "Untitled session":
+            sessions_collection.update_one(
+                {"session_id": session_id},
+                {"$set": {"title": user_message}}
+            )
+
+        return jsonify({"content":graph_response, "session_id": session_id})
+    
     except Exception as e:
-        logger.error(f"Error in chat endpoint: {str(e)}")
-        return jsonify({"error": f"An error occurred: {str(e)}"}), 500
+        logging.error(f"Error processing request: {str(e)}")
+        return jsonify({
+            "error": "An error occurred while processing your request"
+        }), 500
 
 def delete_old_chats():
     cpu_before = psutil.cpu_percent(interval=1)
@@ -204,7 +159,7 @@ def delete_old_chats():
         message_ids = [msg["_id"] for msg in old_messages]
         
         result = chat_collection.delete_many({"_id": {"$in": message_ids}})
-        logger.info(f"Deleted {result.deleted_count} old chat messages.")
+        print(f"Deleted {result.deleted_count} old chat messages.")
 
     # Delete old sessions
     old_session_count = sessions_collection.count_documents({"created_at": {"$lt": time_difference}})
@@ -215,11 +170,11 @@ def delete_old_chats():
         # Delete sessions and their associated chat history
         sessions_collection.delete_many({"session_id": {"$in": session_ids}})
         chat_collection.delete_many({"session_id": {"$in": session_ids}})
-        logger.info(f"Deleted {len(session_ids)} old sessions and their associated chat history.")
+        print(f"Deleted {len(session_ids)} old sessions and their associated chat history.")
 
     cpu_after = psutil.cpu_percent(interval=1)
-    logger.info(f"CPU Usage Before Deletion: {cpu_before}%")
-    logger.info(f"CPU Usage After Deletion: {cpu_after}%")
+    print(f"CPU Usage Before Deletion: {cpu_before}%")
+    print(f"CPU Usage After Deletion: {cpu_after}%")
 
 # Run Scheduler in a Background Thread
 def run_scheduler():
@@ -233,15 +188,6 @@ schedule.every(SCHEDULER_INTERVAL).minutes.do(delete_old_chats)
 # Start scheduler in a separate thread
 scheduler_thread = threading.Thread(target=run_scheduler, daemon=True)
 scheduler_thread.start()
-
-# Cleanup function to be called when the application shuts down
-def cleanup():
-    thread_pool.shutdown(wait=True)
-    mongo_client.close()
-
-# Register cleanup function
-import atexit
-atexit.register(cleanup)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=False)

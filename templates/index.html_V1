@@ -3,58 +3,332 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test Case Generator</title>
+    <title>AI Chat Interface</title>
     <link rel="stylesheet" href="static/styles.css">
 </head>
 <body>
     <div class="chat-container">
-        <div class="chat-box" id="chat-box"></div>
+        <div class="chat-header">
+            <img src="static/logo.svg" alt="Nokia Logo">
+            <div class="header-content">
+                <h1>Nokia Robot Test Script Generation</h1>
+                <p class="subtitle">AI-powered Robot Test Script Generator for Nokia Solutions</p>
+            </div>
+        </div>
+        <div class="chat-messages" id="chat-messages"></div>
         <div class="input-container">
-            <textarea id="description" placeholder="Enter your test description..."></textarea>
-            <button onclick="generateTestCase()">Send</button>
+            <select id="model-selector">
+                <option value="gemini-pro">Gemini Pro</option>
+                <option value="gemini-1.5">Gemini 1.5</option>
+            </select>
+            <button id="new-chat-btn">🆕</button>
+            <input type="text" id="user-input" placeholder="Enter your Test Case details..." autofocus>
+            <button id="send-button" aria-label="Send">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+            </button>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
-        document.getElementById("description").addEventListener("keydown", function(event) {
-    if (event.key === "Enter" && !event.shiftKey) {
-        event.preventDefault();
-        generateTestCase();
-    }
-});
+        const chatMessages = document.getElementById('chat-messages');
+        const userInput = document.getElementById('user-input');
+        const sendButton = document.getElementById('send-button');
+        let isBotResponding = false;
+        let sessionId = localStorage.getItem('session_id') || null;
+        console.log(sessionId);
+        function addMessage(message, isUser) {
+            const container = document.createElement('div');
+            container.className = `message-container ${isUser ? 'user-container' : 'bot-container'}`;
 
-function generateTestCase() {
-    const description = document.getElementById("description").value;
-    if (!description) {
-        alert("Please enter a test description.");
-        return;
+            // Create avatar
+            const avatar = document.createElement('div');
+            avatar.className = `message-avatar ${isUser ? 'user-avatar' : 'bot-avatar'}`;
+            avatar.textContent = isUser ? "👤" : "N";
+            container.appendChild(avatar);
+
+            // Create message bubble
+            const bubble = document.createElement('div');
+            bubble.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+    
+            // Add text content
+            const textDiv = document.createElement('div');
+            textDiv.className = 'message-text';
+            textDiv.innerHTML = marked.parse(message);
+            bubble.appendChild(textDiv);
+            //messageDiv.innerHTML = marked.parse(message);
+            
+            if (!isUser) {
+                // Add timestamp for bot messages
+                const timestamp = document.createElement('div');
+                timestamp.className = 'message-timestamp';
+                timestamp.textContent = new Date().toLocaleString();
+                bubble.appendChild(timestamp);
+                const buttonContainer = document.createElement('div');
+                buttonContainer.className = 'message-actions';
+                
+                buttonContainer.innerHTML = `
+                    <button class="action-btn" data-tooltip="Copy" onclick="copyMessage(this)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M8 4v12h12V4H8zM6 2h16v16H6V2zM4 6H2v18h18v-2"/>
+                        </svg>
+                    </button>
+                    <button class="action-btn" data-tooltip="Execute" onclick="handleExecute(this)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M5 12l5 5 10-10M5 12l5-5 10 10"/>
+                        </svg>
+                    </button>
+                    `;
+            
+                   bubble.appendChild(buttonContainer);
+                }
+
+        
+                container.appendChild(bubble);
+                chatMessages.appendChild(container);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                return container;
+        }
+
+
+        function copyMessage(button) {
+            const messageContainer = button.closest('.message');
+            const textElement = messageContainer.querySelector('.message-text');
+
+            const clonedText = textElement.cloneNode(true);
+            const timestamp = clonedText.querySelector('.message-timestamp');
+            if (timestamp) {
+                timestamp.remove();
+            }
+            navigator.clipboard.writeText(clonedText.textContent.trim());
+            
+            const originalTooltip = button.getAttribute('data-tooltip');
+            button.setAttribute('data-tooltip', 'Copied!');
+            setTimeout(() => {
+                    button.setAttribute('data-tooltip', originalTooltip);
+            }, 2000);
+        }
+
+        function handleExecute(button) {
+            // TODO: Implement execute functionality
+            console.log('Execute button clicked - implement logic here');
+            const message = button.closest('.message').textContent.replace('CopyExecute', '');
+            // Add future implementation code here
+        }
+
+        function addLoadingMessage() {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message bot-message loading-message';
+    
+            const dotsContainer = document.createElement('div');
+            dotsContainer.className = 'loading-dots';
+            
+            dotsContainer.innerHTML = `
+                <div></div>
+                <div></div>
+                <div></div>
+            `;
+            
+            messageDiv.appendChild(dotsContainer);
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            return messageDiv;
+        }
+
+        async function loadChatHistory() {
+    try {
+        sessionId = localStorage.getItem('session_id');
+        const userId = getUserId();
+        const token = localStorage.getItem("access_token"); 
+
+        if (!sessionId) return;  // No session to load
+
+        const response = await fetch('/history', {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Session-ID': sessionId,
+                'User-ID': userId  // ✅ Include user ID
+            }
+        });
+
+        if (!response.ok) {
+            if (response.status === 401) {
+                console.error("Unauthorized: Token might be invalid or expired.");
+                localStorage.removeItem("access_token");  // Remove old token
+                return;
+            }
+            throw new Error('Failed to load chat history');
+        }
+
+        const history = await response.json();
+        console.log(history);
+        history.forEach(message => {
+            addMessage(message.content, message.role === 'user');
+        });
+    } catch (error) {
+        console.error("Error loading chat history:", error);
     }
-    
-    const chatBox = document.getElementById("chat-box");
-    const userMessage = document.createElement("div");
-    userMessage.className = "user-message";
-    userMessage.textContent = description;
-    chatBox.appendChild(userMessage);
-    document.getElementById("description").value = "";
-    chatBox.scrollTop = chatBox.scrollHeight;
-    
-    fetch("/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ description })
-    })
-    .then(response => response.json())
-    //.then(data => console.log(data))
-    .then(data => {
-        console.log(data);
-        const botMessage = document.createElement("div");
-        botMessage.className = "bot-message";
-        botMessage.textContent = data.robot_test || "Error generating test case";
-        chatBox.appendChild(botMessage);
-        chatBox.scrollTop = chatBox.scrollHeight;
-    })
-    .catch(error => console.error("Error:", error));
 }
 
+
+        async function sendMessage() {
+            if (isBotResponding) return;
+            
+            sessionId = localStorage.getItem('session_id') || null;
+            console.log(sessionId);
+            const userId = getUserId();
+            const message = userInput.value.trim();
+            const model = document.getElementById("model-selector").value;
+            const token = localStorage.getItem("access_token");
+            if (!message) return;
+
+            isBotResponding = true;
+            sendButton.disabled = true;
+            addMessage(message, true);
+            userInput.value = '';
+            
+            // Add loading message
+            const loadingMessage = addLoadingMessage();
+            const requestBody = { message, model };
+            console.log("🔹 Sending API Request:", requestBody); // ✅ Debug request
+    console.log("🔹 Headers:", {
+        'Authorization': `Bearer ${token}`,
+        'Session-ID': sessionId,
+        'User-ID': userId,
+        'Content-Type': 'application/json'
+    });
+            try {
+                const response = await fetch('/generate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                        'Session-ID': sessionId,
+                        'User-ID': userId,
+                    },
+                    body: JSON.stringify({ message, model }),
+                });
+
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        console.error("Unauthorized: Token might be invalid or expired.");
+                        localStorage.removeItem("access_token");  // Remove old token
+                        return;
+                    }
+                    throw new Error('Server error');
+                }
+                let reply = await response.json();
+                // console.log(data);
+                let data = reply.content
+                data = data.replace(/\n/g, '\n\n');
+                loadingMessage.remove();
+                addMessage(data, false);
+
+                if(reply.session_id && !sessionId) {
+                    sessionId = reply.session_id;
+                    localStorage.setItem('session_id', sessionId);
+                }
+                
+            } catch (error) {
+                loadingMessage.remove();
+                addMessage('Error: Could not generate response', false);
+                console.error('Error:', error);
+            } finally {
+                isBotResponding = false;
+                sendButton.disabled = false;
+            }
+        }
+// ✅ Function to generate a random User ID if not logged in
+function getUserId() {
+    let userId = localStorage.getItem("user_id");
+    if (!userId) {
+        userId = "guest_" + crypto.randomUUID();  // Generate unique ID
+        localStorage.setItem("user_id", userId);
+    }
+    return userId;
+}
+
+// ✅ Function to get or create a new Session ID
+async function getSessionId() {
+    let sessionId = localStorage.getItem("session_id");
+
+    if (!sessionId) {
+        // ✅ Create a new session if none exists
+        const response = await fetch("/start_session", {
+            method: "POST",
+            headers: {
+                "Authorization": "Bearer " + localStorage.getItem("access_token"),
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ user_id: getUserId() })
+        });
+
+        const data = await response.json();
+        if (data.session_id) {
+            sessionId = data.session_id;
+            localStorage.setItem("session_id", sessionId);
+        }
+    }
+    return sessionId;
+}
+async function startNewSession() {
+    const response = await fetch("/new_session", {
+        method: "POST",
+        headers: {
+            "Authorization": "Bearer " + localStorage.getItem("access_token"),
+            "Content-Type": "application/json"
+        }
+    });
+
+    const data = await response.json();
+    if (data.session_id) {
+        localStorage.setItem("session_id", data.session_id);
+        console.log("New session started:", data.session_id);
+
+        // ✅ Clear chat history from UI
+        document.getElementById("chat-messages").innerHTML = "";
+
+        // ✅ Notify WebSocket of the new session
+        // socket.emit("join", { session_id: data.session_id });
+    }
+}
+
+
+
+// ✅ Auto-assign User ID and Session ID when the page loads
+document.addEventListener("DOMContentLoaded", async () => {
+    const userId = getUserId();
+    let token = localStorage.getItem("access_token");
+
+    if (!token) {
+        console.log("No JWT token found, requesting a new one...");
+        const response = await fetch("/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ user_id: userId })
+        });
+
+        const data = await response.json();
+        if (data.access_token) {
+            localStorage.setItem("access_token", data.access_token);
+            console.log("New JWT token received.");
+        }
+    }
+
+    await getSessionId();
+    loadChatHistory();
+});
+
+
+        // window.onload = loadChatHistory;
+        document.getElementById("new-chat-btn").addEventListener("click", startNewSession);
+        sendButton.addEventListener('click', sendMessage);
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
     </script>
 </body>
 </html>

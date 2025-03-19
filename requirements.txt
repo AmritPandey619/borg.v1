@@ -9,3 +9,5 @@ chromadb
 flask
 flask_socketio
 flask_cors
+pymongo
+schedule

@@ -28,11 +28,17 @@ class GenerateAgent(Agent):
         """
         logger.info("Starting generate method...")
         logger.info("---CALL GENERATE AGENT---")
+        helpRequest = state["helpRequest"]
         messages = state["messages"]
         question = messages[0].content
         last_message = messages[-1]
         docs = last_message.content
         logger.info("---STEP 10-- %s",docs)
+        if helpRequest:
+            prompt = f"Here is the relevant Robot Framework documentation: {docs}\nExplain this in simple terms."
+            response = self.llm.chat_completion(prompt=prompt)
+
+            return {"messages": [response]}
       #  api_config_file: str = config["configurable"]["api_config_file"]
        # api_desc_file: str = config["configurable"]["api_desc_file"]
         #api = ApiConfig(default_config_file_path=api_config_file,

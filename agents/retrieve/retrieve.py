@@ -4,7 +4,7 @@ from langchain_core.output_parsers import PydanticOutputParser
 from agents.agent import Agent
 from llm.llm import LLM
 from utils.logger import setup_logger
-from storage.vector_store import VectorStore
+from storage.vector_store_old import VectorStore
 from config.api_config_reader import ApiConfig
 from config.config_reader import ConfigReader
 import yaml
@@ -34,6 +34,18 @@ class RetrieveAgent(Agent):
         self.llm_query = config_reader.get_or_default_bool("LLM_QUERY", False)
         logger.info("RetrieveAgent initialized.")
 
+    def is_documentation_query_llm(self, query: str) -> bool:
+        """Uses LLM to determine if the user is asking for documentation help."""
+        prompt = f"""
+        Classify the intent of the following query as either 'documentation' or 'test_case':
+        Query: "{query}"
+        
+        If the query is asking about Robot Framework syntax, keywords, or usage, return 'documentation'.
+        Otherwise, return 'test_case'.
+        """
+        response = self.llm.chat_completion(prompt=prompt)
+        return "documentation" in response.lower()
+
     def read_prompt(self, prompt_file) -> str:
         return open(prompt_file).read().strip()
 
@@ -55,6 +67,7 @@ class RetrieveAgent(Agent):
         api_desc_file: str = config["configurable"]["api_desc_file"]
         messages = state["messages"]
         question = messages[0].content
+        helpRequest = self.is_documentation_query_llm(question)
         # messages is something like: [HumanMessage(content='Print the REST request to create a user named
         # himanshu singh who has a mobile number of 99999999 and prefers sms notification in german
         # language', additional_kwargs={}, response_metadata={}, id='c62addda-9645-489e-9e08-1665126d9adc')]
@@ -148,4 +161,4 @@ class RetrieveAgent(Agent):
         logger.info("Vector search complete. Exiting retrieve method.")
 
         # We return a list, because this will get added to the existing list
-        return {"messages": [response2]}
+        return {"messages": [response2], 'helpRequest':helpRequest}
